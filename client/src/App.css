@@ -1,0 +1,9 @@
+.rooms {
+    background-color: red;
+    list-style-type: none;
+
+}
+
+.rooms li {
+    cursor: pointer;
+}
