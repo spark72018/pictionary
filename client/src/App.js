@@ -45,7 +45,9 @@ class App extends Component {
 
   handleJoinedRoom = roomInfo => {
     console.log('handleJoinedRoom');
-    this.setState({ joinedRoom: true, roomInfo });
+    this.setState({ joinedRoom: true, roomInfo }, () =>
+      console.log('joined room', this.state)
+    );
   };
 
   setAskForUserName = bool => this.setState({ askForUserName: bool });
@@ -63,6 +65,7 @@ class App extends Component {
     const joinRoomName = e.target.innerText;
 
     this.setAskForUserName(true);
+
     if (joinRoomName === 'Whiskey Room') {
       return this.setJoinRoomName('whiskeyRoom');
     } else if (joinRoomName === 'Wine Room') {

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const initJoinRoom = require('./utilityFns/initJoinRoom');
-const initSendMessage = require('./utilityFns/initSendMessage');
-const GameRoom = mongoose.model('gameRooms');
+const init = require('./utilityFns/init');
 
 module.exports = app => {
   const http = require('http').Server(app);
@@ -14,11 +12,7 @@ module.exports = app => {
   io.on('connection', socket => {
     console.log('user connected with id', socket.id);
 
-    // set up listening for 'join room' event
-    initJoinRoom(socket, rooms);
-
-    // set up listening for 'send message' event
-    initSendMessage(socket);
+    init(socket, rooms);
 
     socket.on('disconnect', () => console.log('Client disconnected'));
   });

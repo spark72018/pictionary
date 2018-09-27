@@ -2,20 +2,22 @@ const addUser = require('./addUser');
 
 const initJoinRoom = (socket, rooms) =>
   socket.on('join room', info => {
-    const { username, joinRoomName } = info;
+    const { username, joinRoomName: roomName } = info;
     console.log('username', username);
-    console.log('joinRoomName', joinRoomName);
-
+    console.log('roomName', roomName);
+    const { id } = socket;
     socket.username = username;
-    socket.room = joinRoomName;
+    socket.room = roomName;
 
-    const addedUser = addUser(username, joinRoomName, rooms);
+    const userData = { id, username, roomName, state: rooms };
+
+    const addedUser = addUser(userData);
 
     if (addedUser) {
-      socket.join(joinRoomName);
-      socket.emit('joined room', rooms[joinRoomName]);
+      socket.join(roomName);
+      socket.emit('joined room', rooms[roomName]);
       socket.broadcast
-        .to(joinRoomName)
+        .to(roomName)
         .emit('updateChat', `${username} has joined the room.`);
     } else {
       socket.emit('failed join');
