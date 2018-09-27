@@ -30,7 +30,8 @@ class App extends Component {
     askForUserName: false,
     joinRoomName: '',
     joinedRoom: false,
-    roomInfo: null
+    roomInfo: null,
+    msgs: []
   };
 
   socket = io(DEV_URL);
@@ -38,6 +39,19 @@ class App extends Component {
   componentDidMount() {
     this.initSocket(this.socket);
   }
+
+  addMsg = msg => {
+    const { msgs } = this.state;
+    const length = msgs.length;
+
+    if (length < 50) {
+      return this.setState({ msgs: [...msgs, msg] });
+    } else {
+      const [head, ...tail] = msgs;
+
+      return this.setState({ msgs: [...tail, msg] });
+    }
+  };
 
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
