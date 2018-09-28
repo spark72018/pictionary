@@ -1,10 +1,9 @@
 import React from 'react';
-import DrawingBoard from './DrawingBoard';
 
-export default function GameRoom({ chatRoom }) {
+export default function GameRoom({ chatRoom, drawingBoard }) {
   return (
     <div className="game-room">
-      <DrawingBoard />
+      {drawingBoard}
       {chatRoom}
     </div>
   );

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 
+// props: socket
 export default class DrawingBoard extends Component {
-  state = {};
+  state = {
+      drawing: false,
+      currentColor: 'black'
+  };
+
+  canvasRef = React.createRef();
 
   render() {
-    return <h1>Drawing Board</h1>;
+    return <canvas ref={this.canvasRef} width={400} height={400} />;
   }
 }

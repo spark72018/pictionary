@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import JoinRoom from './components/JoinRoom';
 import GameRoom from './components/GameRoom';
 import ChatRoom from './components/ChatRoom';
+import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
 import { ROOM_NAMES, DEV_URL } from './constants';
 import './App.css';
@@ -47,16 +48,18 @@ class App extends Component {
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
     socket.on('updateChat', this.handleUpdateChat);
+    socket.on('drawing', this.handleDrawing);
   };
 
   setAskForUserName = bool => this.setState({ askForUserName: bool });
 
   setJoinRoomName = str => this.setState({ joinRoomName: str });
 
-  handleUpdateChat = dataObj => {
-    console.log('handleUpdateChat');
-    return this.addMsg(dataObj);
-  };
+  handleDrawing = () => {
+    console.log('handleDrawing');
+  }
+
+  handleUpdateChat = dataObj => this.addMsg(dataObj);
 
   handleJoinedRoom = roomInfo => {
     console.log('handleJoinedRoom');
@@ -100,6 +103,7 @@ class App extends Component {
   render() {
     const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
     const chatRoom = <ChatRoom msgs={msgs} socket={this.socket} />;
+    const drawingBoard = <DrawingBoard socket={this.socket} />;
     return !joinedRoom ? (
       <JoinRoom
         roomNames={ROOM_NAMES}
@@ -108,7 +112,7 @@ class App extends Component {
         handleSubmit={this.handleSubmit}
       />
     ) : (
-      <GameRoom chatRoom={chatRoom} />
+      <GameRoom drawingBoard={drawingBoard} chatRoom={chatRoom} />
     );
   }
 }
