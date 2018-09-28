@@ -5,7 +5,7 @@ import GameRoom from './components/GameRoom';
 import ChatRoom from './components/ChatRoom';
 import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
-import { ROOM_NAMES, DEV_URL } from './constants';
+import { ROOM_NAMES, DEV_URL, DEFAULT_COLOR } from './constants';
 import './App.css';
 /*
   - if gameroom.currentlyPlaying is true, newly joined user can only spectate
@@ -22,17 +22,19 @@ class App extends Component {
     joinRoomName: '',
     joinedRoom: false,
     roomInfo: null,
-    msgs: []
+    msgs: [],
+    drawing: false,
+    currentColor: DEFAULT_COLOR,
+    currentMouseCoords: {}
   };
 
   socket = io(DEV_URL);
 
   componentDidMount() {
-    this.initSocket(this.socket);
+    return this.initSocket(this.socket);
   }
 
   addMsg = msgData => {
-    console.log('addMsg');
     const { msgs } = this.state;
     const length = msgs.length;
 
@@ -48,8 +50,13 @@ class App extends Component {
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
     socket.on('updateChat', this.handleUpdateChat);
-    socket.on('drawing', this.handleDrawing);
   };
+
+  setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
+
+  setCurrentColor = color => this.setState({ currentColor: color });
+
+  setDrawing = bool => this.setState({ drawing: bool });
 
   setAskForUserName = bool => this.setState({ askForUserName: bool });
 
@@ -57,7 +64,7 @@ class App extends Component {
 
   handleDrawing = () => {
     console.log('handleDrawing');
-  }
+  };
 
   handleUpdateChat = dataObj => this.addMsg(dataObj);
 
@@ -100,10 +107,91 @@ class App extends Component {
     }
   };
 
+  handleMouseMoveBoard = (e, canvas) => {
+    console.log('handleMouseMove');
+    const {
+      drawing,
+      currentMouseCoords: { x, y },
+      currentColor
+    } = this.state;
+
+    if (!drawing) return;
+
+    this.drawLine(x, y, e.clientX, e.clientY, currentColor, true, canvas);
+    return this.setMouseCoords(e.clientX, e.clientY);
+  };
+
+  handleMouseUpBoard = (e, canvas) => {
+    console.log('handleMouseUpBoard');
+    if (!this.state.drawing) return;
+
+    this.setDrawing(false);
+
+    const {
+      currentMouseCoords: { x, y },
+      currentColor
+    } = this.state;
+    return this.drawLine(
+      x,
+      y,
+      e.clientX,
+      e.clientY,
+      currentColor,
+      true,
+      canvas
+    );
+  };
+
+  handleMouseDownBoard = e => {
+    console.log('handleMouseDownBoard');
+    this.setDrawing(true);
+    console.log('coords', e.clientX, e.clientY);
+    this.setMouseCoords(e.clientX, e.clientY);
+  };
+
+  handleResize = e => {
+    console.log('handleResize called');
+  };
+
+  emitDrawingInfo = (x0, y0, x1, y1, color, canvas) => {
+    const w = canvas.width;
+    const h = canvas.height;
+    const data = {
+      x0: x0 / w,
+      y0: y0 / h,
+      x1: x1 / w,
+      y1: y1 / h,
+      color
+    };
+
+    this.socket.emit('drawing', data);
+  };
+
+  drawLine = (x0, y0, x1, y1, color, emit, canvas) => {
+    console.log('drawLine called');
+    const cxt = canvas.getContext('2d');
+    const adjustedY0 = y0 - canvas.getBoundingClientRect().top;
+    const adjustedY1 = y1 - canvas.getBoundingClientRect().top;
+    const adjustedX0 = x0 - canvas.getBoundingClientRect().left;
+    const adjustedX1 = x1 - canvas.getBoundingClientRect().left;
+    cxt.beginPath();
+    cxt.moveTo(adjustedX0, adjustedY0);
+    cxt.lineTo(adjustedX1, adjustedY1);
+    cxt.strokeStyle = color;
+    cxt.lineWidth = 2;
+    cxt.stroke();
+    cxt.closePath();
+
+    if (!emit) return;
+
+    const { currentColor } = this.state;
+
+    return this.emitDrawingInfo(x0, y0, x1, y1, currentColor, canvas);
+  };
+
   render() {
     const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
-    const chatRoom = <ChatRoom msgs={msgs} socket={this.socket} />;
-    const drawingBoard = <DrawingBoard socket={this.socket} />;
+
     return !joinedRoom ? (
       <JoinRoom
         roomNames={ROOM_NAMES}
@@ -112,7 +200,17 @@ class App extends Component {
         handleSubmit={this.handleSubmit}
       />
     ) : (
-      <GameRoom drawingBoard={drawingBoard} chatRoom={chatRoom} />
+      <GameRoom>
+        <ChatRoom msgs={msgs} socket={this.socket} />
+        <DrawingBoard
+          handleMouseMove={this.handleMouseMoveBoard}
+          handleMouseDown={this.handleMouseDownBoard}
+          handleMouseUp={this.handleMouseUpBoard}
+          handleMouseOut={this.handleMouseUpBoard}
+          drawLine={this.drawLine}
+          socket={this.socket}
+        />
+      </GameRoom>
     );
   }
 }

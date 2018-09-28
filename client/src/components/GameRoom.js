@@ -1,10 +1,6 @@
 import React from 'react';
 
-export default function GameRoom({ chatRoom, drawingBoard }) {
-  return (
-    <div className="game-room">
-      {drawingBoard}
-      {chatRoom}
-    </div>
-  );
+export default function GameRoom({ children }) {
+  console.log('GameRoom children', children);
+  return <div className="game-room">{children}</div>;
 }
