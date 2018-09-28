@@ -12,7 +12,7 @@ module.exports = app => {
   io.on('connection', socket => {
     console.log('user connected with id', socket.id);
 
-    init(socket, rooms);
+    init(socket, rooms, io);
 
     socket.on('disconnect', () => console.log('Client disconnected'));
   });

@@ -7,3 +7,17 @@
 .rooms li {
     cursor: pointer;
 }
+
+.msg-time {
+    font-size: .7em;
+}
+
+.chat-messages {
+    list-style-type: none;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.message {
+    margin: 0;
+}

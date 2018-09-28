@@ -2,20 +2,10 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import JoinRoom from './components/JoinRoom';
 import GameRoom from './components/GameRoom';
+import ChatRoom from './components/ChatRoom';
+import getTime from './utilityFns/getTime';
 import { ROOM_NAMES, DEV_URL } from './constants';
 import './App.css';
-
-/*
-  - User connects, show all GameRooms
-  - if User clicks one, prompt for Username
-  - emit 'username created' to backend with mongoose id of gameroom and username
-  - findOneandupdate gameroom id
-  - create new Player;
-  - $push to gameroom currentPlayers
-  - server socket.emit 'successfully joined' to user
-  - server socket.broadcast.emit 'user joined' with username
-*/
-
 /*
   - if gameroom.currentlyPlaying is true, newly joined user can only spectate
   - otherwise, whoever is 'drawer' can start the game. After 15 seconds, automatically start game
@@ -40,39 +30,59 @@ class App extends Component {
     this.initSocket(this.socket);
   }
 
-  addMsg = msg => {
+  addMsg = msgData => {
+    console.log('addMsg');
     const { msgs } = this.state;
     const length = msgs.length;
 
     if (length < 50) {
-      return this.setState({ msgs: [...msgs, msg] });
+      return this.setState({ msgs: [...msgs, msgData] });
     } else {
       const [head, ...tail] = msgs;
 
-      return this.setState({ msgs: [...tail, msg] });
+      return this.setState({ msgs: [...tail, msgData] });
     }
   };
 
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
-  };
-
-  handleJoinedRoom = roomInfo => {
-    console.log('handleJoinedRoom');
-    this.setState({ joinedRoom: true, roomInfo }, () =>
-      console.log('joined room', this.state)
-    );
+    socket.on('updateChat', this.handleUpdateChat);
   };
 
   setAskForUserName = bool => this.setState({ askForUserName: bool });
 
   setJoinRoomName = str => this.setState({ joinRoomName: str });
 
+  handleUpdateChat = dataObj => {
+    console.log('handleUpdateChat');
+    return this.addMsg(dataObj);
+  };
+
+  handleJoinedRoom = roomInfo => {
+    console.log('handleJoinedRoom');
+
+    this.setState({
+      joinedRoom: true,
+      roomInfo,
+      msgs: [
+        {
+          username: '',
+          time: getTime(),
+          msg: 'You have successfully joined!'
+        }
+      ]
+    });
+  };
+
   handleSubmit = (e, username) => {
     e.preventDefault();
     const { joinRoomName } = this.state;
 
-    this.socket.emit('join room', { username, joinRoomName });
+    this.socket.emit('join room', {
+      username,
+      joinRoomName,
+      time: getTime()
+    });
   };
 
   handleRoomItemClick = e => {
@@ -88,7 +98,8 @@ class App extends Component {
   };
 
   render() {
-    const { askForUserName, joinRoomName, joinedRoom } = this.state;
+    const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
+    const chatRoom = <ChatRoom msgs={msgs} socket={this.socket} />;
     return !joinedRoom ? (
       <JoinRoom
         roomNames={ROOM_NAMES}
@@ -97,7 +108,7 @@ class App extends Component {
         handleSubmit={this.handleSubmit}
       />
     ) : (
-      <GameRoom />
+      <GameRoom chatRoom={chatRoom} />
     );
   }
 }

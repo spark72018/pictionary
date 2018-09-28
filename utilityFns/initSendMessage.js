@@ -1,10 +1,12 @@
-const initSendMessage = socket =>
-  socket.on('send message', msg => {
-    console.log('message event');
-    const { username, room } = socket;
-    console.log('username, room', username, room);
+const initSendMessage = (socket, io) =>
+  socket.on('send message', ({ msg, time }) => {
+    try {
+      const { username, room } = socket;
 
-    socket.broadcast.to(room).emit('updateChat', { username, msg });
+      io.sockets.in(room).emit('updateChat', { username, time, msg });
+    } catch (e) {
+      socket.to(room).emit('failedUpdateChat', e);
+    }
   });
 
 module.exports = initSendMessage;
