@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
+import SweetAlert from 'sweetalert2-react';
 import io from 'socket.io-client';
 import JoinRoom from './components/JoinRoom';
 import GameRoom from './components/GameRoom';
 import ChatRoom from './components/ChatRoom';
+import TimeLeft from './components/TimeLeft';
 import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
 import { ROOM_NAMES, DEV_URL, DEFAULT_COLOR } from './constants';
 import './App.css';
-/*
-  - if gameroom.currentlyPlaying is true, newly joined user can only spectate
-  - otherwise, whoever is 'drawer' can start the game. After 15 seconds, automatically start game
-  - 
-  - if 'spectator' is true, cannot interact with website at all
-  - if 'guesser' is true, can only chat
-  - if 'drawer' is true, can draw, and end round
-*/
 
 class App extends Component {
   state = {
@@ -25,7 +19,14 @@ class App extends Component {
     msgs: [],
     drawing: false,
     currentColor: DEFAULT_COLOR,
-    currentMouseCoords: {}
+    currentMouseCoords: {},
+    intervalId: null,
+    seconds: 0,
+    showAlert: false,
+    alertInfo: {
+      title: 'Unauthorized',
+      text: 'You are not the drawer!'
+    }
   };
 
   socket = io(DEV_URL);
@@ -33,6 +34,22 @@ class App extends Component {
   componentDidMount() {
     return this.initSocket(this.socket);
   }
+
+  startTimer = cb =>
+    cb
+      ? this.setState(
+          {
+            intervalId: window.setInterval(this.decrementSeconds, 1000)
+          },
+          cb
+        )
+      : this.setState({
+          intervalId: window.setInterval(this.decrementSeconds, 1000)
+        });
+
+  stopTimer = () => window.clearInterval(this.state.intervalId);
+
+  decrementSeconds = () => this.setState({ seconds: this.state.seconds - 1 });
 
   addMsg = msgData => {
     const { msgs } = this.state;
@@ -108,7 +125,6 @@ class App extends Component {
   };
 
   handleMouseMoveBoard = (e, canvas) => {
-    console.log('handleMouseMove');
     const {
       drawing,
       currentMouseCoords: { x, y },
@@ -118,6 +134,7 @@ class App extends Component {
     if (!drawing) return;
 
     this.drawLine(x, y, e.clientX, e.clientY, currentColor, true, canvas);
+
     return this.setMouseCoords(e.clientX, e.clientY);
   };
 
@@ -143,10 +160,16 @@ class App extends Component {
   };
 
   handleMouseDownBoard = e => {
-    console.log('handleMouseDownBoard');
     this.setDrawing(true);
-    console.log('coords', e.clientX, e.clientY);
-    this.setMouseCoords(e.clientX, e.clientY);
+
+    return this.setMouseCoords(e.clientX, e.clientY);
+  };
+
+  handleStartRound = e => {
+    // check if drawer
+    // if yes, emit 'start round'
+    // if no, sweet alert "you are not drawer" or something similar
+    //
   };
 
   handleResize = e => {
@@ -174,6 +197,7 @@ class App extends Component {
     const adjustedY1 = y1 - canvas.getBoundingClientRect().top;
     const adjustedX0 = x0 - canvas.getBoundingClientRect().left;
     const adjustedX1 = x1 - canvas.getBoundingClientRect().left;
+
     cxt.beginPath();
     cxt.moveTo(adjustedX0, adjustedY0);
     cxt.lineTo(adjustedX1, adjustedY1);
@@ -190,7 +214,15 @@ class App extends Component {
   };
 
   render() {
-    const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
+    const {
+      askForUserName,
+      joinRoomName,
+      joinedRoom,
+      msgs,
+      seconds,
+      showAlert,
+      alertInfo
+    } = this.state;
 
     return !joinedRoom ? (
       <JoinRoom
@@ -201,7 +233,14 @@ class App extends Component {
       />
     ) : (
       <GameRoom>
+        <SweetAlert
+          showAlert={showAlert}
+          title={alertInfo.title}
+          text={alertInfo.text}
+          onConfirm={() => this.setState({ showAlert: false })}
+        />
         <ChatRoom msgs={msgs} socket={this.socket} />
+        <TimeLeft seconds={seconds} />
         <DrawingBoard
           handleMouseMove={this.handleMouseMoveBoard}
           handleMouseDown={this.handleMouseDownBoard}
