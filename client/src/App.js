@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SweetAlert from 'sweetalert2-react';
 import io from 'socket.io-client';
 import JoinRoom from './components/JoinRoom';
 import GameRoom from './components/GameRoom';
@@ -17,12 +16,14 @@ class App extends Component {
     joinedRoom: false,
     roomInfo: null,
     msgs: [],
+    previousWords: [],
     drawing: false,
     currentColor: DEFAULT_COLOR,
     currentMouseCoords: {},
     intervalId: null,
     seconds: 0,
     showAlert: false,
+    isDrawer: false,
     alertInfo: {
       title: 'Unauthorized',
       text: 'You are not the drawer!'
@@ -34,6 +35,21 @@ class App extends Component {
   componentDidMount() {
     return this.initSocket(this.socket);
   }
+
+  initSocket = socket => {
+    socket.on('joined room', this.handleJoinedRoom);
+    socket.on('updateChat', this.handleUpdateChat);
+    socket.on('room playing', this.handleRoomPlaying);
+  };
+
+  handleRoomPlaying = ({ roomInfo, id }) => {
+    this.setState({ roomInfo, id });
+    const { users, currentDrawerIdx } = roomInfo;
+    const currentDrawer = users[currentDrawerIdx];
+    if (currentDrawer.id === id) {
+      this.setState({ isDrawer: true });
+    }
+  };
 
   startTimer = cb =>
     cb
@@ -51,6 +67,12 @@ class App extends Component {
 
   decrementSeconds = () => this.setState({ seconds: this.state.seconds - 1 });
 
+  addToPreviousWords = word => {
+    const { previousWords } = this.state;
+
+    return this.setState({ previousWords: [...previousWords, word] });
+  };
+
   addMsg = msgData => {
     const { msgs } = this.state;
     const length = msgs.length;
@@ -62,11 +84,6 @@ class App extends Component {
 
       return this.setState({ msgs: [...tail, msgData] });
     }
-  };
-
-  initSocket = socket => {
-    socket.on('joined room', this.handleJoinedRoom);
-    socket.on('updateChat', this.handleUpdateChat);
   };
 
   setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
@@ -81,6 +98,29 @@ class App extends Component {
 
   handleDrawing = () => {
     console.log('handleDrawing');
+  };
+
+  showCannotStartGameAlert = () =>
+    this.setState({
+      showAlert: true,
+      alertInfo: {
+        title: 'Cannot start the game yet',
+        text: 'This game requires at least two players'
+      }
+    });
+
+  handleStartGameClick = e => {
+    console.log('handleStartGameClick called');
+    const { roomInfo } = this.state;
+    if (roomInfo.users.length < 2) {
+      return this.showCannotStartGameAlert();
+    }
+
+    this.socket.emit('start game');
+  };
+
+  handleStartRoundClick = e => {
+    console.log('handleStartRoundClick');
   };
 
   handleUpdateChat = dataObj => this.addMsg(dataObj);
@@ -165,13 +205,6 @@ class App extends Component {
     return this.setMouseCoords(e.clientX, e.clientY);
   };
 
-  handleStartRound = e => {
-    // check if drawer
-    // if yes, emit 'start round'
-    // if no, sweet alert "you are not drawer" or something similar
-    //
-  };
-
   handleResize = e => {
     console.log('handleResize called');
   };
@@ -224,6 +257,8 @@ class App extends Component {
       alertInfo
     } = this.state;
 
+    console.log('roomInfo is', this.state.roomInfo);
+
     return !joinedRoom ? (
       <JoinRoom
         roomNames={ROOM_NAMES}
@@ -232,15 +267,14 @@ class App extends Component {
         handleSubmit={this.handleSubmit}
       />
     ) : (
-      <GameRoom>
-        <SweetAlert
-          showAlert={showAlert}
-          title={alertInfo.title}
-          text={alertInfo.text}
-          onConfirm={() => this.setState({ showAlert: false })}
-        />
+      <GameRoom
+        showAlert={showAlert}
+        alertInfo={alertInfo}
+        seconds={seconds}
+        handleStartGameClick={this.handleStartGameClick}
+        handleStartRoundClick={this.handleStartRoundClick}
+      >
         <ChatRoom msgs={msgs} socket={this.socket} />
-        <TimeLeft seconds={seconds} />
         <DrawingBoard
           handleMouseMove={this.handleMouseMoveBoard}
           handleMouseDown={this.handleMouseDownBoard}

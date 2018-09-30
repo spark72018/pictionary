@@ -22,7 +22,9 @@ export default class ChatRoom extends Component {
 
   handleChange = e => this.setState({ msg: e.target.value });
 
-  makeMessageItems = (data, idx) => <Message data={data} idx={idx} />;
+  makeMessageItems = (data, idx) => (
+    <Message data={data} key={`message${idx}`} />
+  );
 
   render() {
     const { msg } = this.state;

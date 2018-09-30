@@ -1,12 +1,12 @@
 const initJoinRoom = require('./initJoinRoom');
 const initSendMessage = require('./initSendMessage');
-const initGameStart = require('./initGameStart');
+const initStartGame = require('./initStartGame');
 const initDrawing = require('./initDrawing');
 
 const init = (socket, state, io) => {
   initJoinRoom(socket, state);
   initSendMessage(socket, io);
-  initGameStart(socket, state);
+  initStartGame(socket, state);
   initDrawing(socket, io);
 };
 

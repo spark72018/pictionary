@@ -5,8 +5,18 @@ module.exports = app => {
   const http = require('http').Server(app);
   const io = require('socket.io')(http);
   const rooms = {
-    whiskeyRoom: { users: [], playing: false },
-    wineRoom: { users: [], playing: false }
+    whiskeyRoom: {
+      users: [],
+      playing: false,
+      usersPlaying: [],
+      currentDrawerIdx: null
+    },
+    wineRoom: {
+      users: [],
+      playing: false,
+      usersPlaying: [],
+      currentDrawerIdx: null
+    }
   };
 
   io.on('connection', socket => {
