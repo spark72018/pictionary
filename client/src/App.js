@@ -6,7 +6,14 @@ import ChatRoom from './components/ChatRoom';
 import TimeLeft from './components/TimeLeft';
 import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
-import { ROOM_NAMES, DEV_URL, DEFAULT_COLOR } from './constants';
+import {
+  ROOM_NAMES,
+  DEV_URL,
+  DEFAULT_COLOR,
+  EASY_WORDS,
+  MEDIUM_WORDS,
+  HARD_WORDS
+} from './constants';
 import './App.css';
 
 class App extends Component {
@@ -27,7 +34,10 @@ class App extends Component {
     alertInfo: {
       title: 'Unauthorized',
       text: 'You are not the drawer!'
-    }
+    },
+    easyWords: EASY_WORDS,
+    mediumWords: MEDIUM_WORDS,
+    hardWords: HARD_WORDS
   };
 
   socket = io(DEV_URL);
@@ -75,9 +85,8 @@ class App extends Component {
 
   addMsg = msgData => {
     const { msgs } = this.state;
-    const length = msgs.length;
 
-    if (length < 50) {
+    if (msgs.length < 50) {
       return this.setState({ msgs: [...msgs, msgData] });
     } else {
       const [head, ...tail] = msgs;
