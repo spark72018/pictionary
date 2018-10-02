@@ -7,10 +7,11 @@ import SweetAlert from 'sweetalert2-react';
 export default function GameRoom({
   showAlert,
   alertInfo,
-  seconds,
   pickDifficulty,
   currentWord,
   isDrawer,
+  preRound,
+  gameRound,
   handleStartGameClick,
   handleStartRoundClick,
   handlePickDifficultyClick,
@@ -36,6 +37,15 @@ export default function GameRoom({
         handleStartGameClick={handleStartGameClick}
         handleStartRoundClick={handleStartRoundClick}
       />
+      {preRound ? (
+        isDrawer ? (
+          <h3>Time left to become familiar with card: </h3>
+        ) : (
+          <h3>Time left for drawer to become familliar with card: </h3>
+        )
+      ) : gameRound ? (
+        <h3>Time left until round ends: </h3>
+      ) : null}
       <TimeLeft seconds={seconds} />
       {children}
     </div>

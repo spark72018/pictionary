@@ -10,5 +10,6 @@ module.exports = (socket, roomInfo) => {
   resetPreRoundSeconds(roomInfo);
   startGameRoundTimer(socket, roomInfo);
 
+  socket.broadcast.to(room).emit('endPreRound');
   socket.broadcast.to(room).emit('startGameRound');
 };

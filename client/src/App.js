@@ -69,9 +69,13 @@ class App extends Component {
     socket.on('updateChat', this.handleUpdateChat);
     socket.on('room playing', this.handleRoomPlaying);
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
+    socket.on('endPreRound', this.handleEndPreRound);
   };
 
   // SOCKET HANDLERS
+  handleEndPreRound = () => this.setPreRound(false);
+  handleUpdateChat = dataObj => this.addMsg(dataObj);
+
   handleRoomPlaying = ({ roomInfo, id }) => {
     this.setState({ roomInfo, id });
     const { users, currentDrawerIdx } = roomInfo;
@@ -99,10 +103,9 @@ class App extends Component {
   };
 
   handleUpdatePreRoundSeconds = roomInfo => {
-    const { isDrawer } = this.state;
+    this.setPreRound(true);
+    this.setState({ roomInfo });
   };
-
-  handleUpdateChat = dataObj => this.addMsg(dataObj);
 
   // CLICK HANDLERS
   handleStartGameClick = e => {
@@ -165,6 +168,10 @@ class App extends Component {
   setJoinRoomName = str => this.setState({ joinRoomName: str });
 
   setPickDifficulty = bool => this.setState({ pickDifficulty: bool });
+
+  setPreRound = bool => this.setState({ preRound: bool });
+
+  setGameRound = bool => this.setState({ gameRound: bool });
 
   // FUNCTIONS THAT ADD TO STATE
   addToPreviousWords = word => {
@@ -292,12 +299,13 @@ class App extends Component {
       joinRoomName,
       joinedRoom,
       msgs,
-      seconds,
       showAlert,
       alertInfo,
       pickDifficulty,
       currentWord,
-      isDrawer
+      isDrawer,
+      preRound,
+      gameRound
     } = this.state;
 
     return !joinedRoom ? (
@@ -311,10 +319,11 @@ class App extends Component {
       <GameRoom
         showAlert={showAlert}
         alertInfo={alertInfo}
-        seconds={seconds}
         pickDifficulty={pickDifficulty}
         currentWord={currentWord}
         isDrawer={isDrawer}
+        preRound={preRound}
+        gameRound={gameRound}
         handleStartGameClick={this.handleStartGameClick}
         handleStartRoundClick={this.handleStartRoundClick}
         handlePickDifficultyClick={this.handlePickDifficultyClick}
