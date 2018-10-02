@@ -8,6 +8,7 @@ export default function GameRoom({
   showAlert,
   alertInfo,
   pickDifficulty,
+  wordDifficulty,
   currentWord,
   isDrawer,
   preRound,
@@ -19,6 +20,19 @@ export default function GameRoom({
 }) {
   return (
     <div className="game-room">
+      {wordDifficulty ? (
+        <div className="word-difficulty">
+          <h2>{`Drawer has picked ${
+            wordDifficulty === 'easyWords'
+              ? 'an easy'
+              : wordDifficulty === 'mediumWords'
+                ? 'a medium'
+                : wordDifficulty === 'hardWords'
+                  ? 'a hard'
+                  : null
+          } word`}</h2>
+        </div>
+      ) : null}
       {isDrawer ? (
         <h2 className="current-word">{`Current Word: ${currentWord}`}</h2>
       ) : (

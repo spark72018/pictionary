@@ -37,6 +37,7 @@ class App extends Component {
     roomInfo: null,
     msgs: [],
     previousWords: [],
+    roomPlaying: false,
     // pickDifficulty: false,
     pickDifficulty: true, // for dev
     drawing: false,
@@ -51,6 +52,7 @@ class App extends Component {
       title: 'Unauthorized',
       text: 'You are not the drawer!'
     },
+    wordDifficulty: '',
     easyWords: EASY_WORDS,
     mediumWords: MEDIUM_WORDS,
     hardWords: HARD_WORDS,
@@ -70,14 +72,23 @@ class App extends Component {
     socket.on('room playing', this.handleRoomPlaying);
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
     socket.on('endPreRound', this.handleEndPreRound);
+    socket.on('startGameRound');
+    socket.on('pickedDifficulty', this.handlePickedDifficulty);
   };
 
   // SOCKET HANDLERS
   handleEndPreRound = () => this.setPreRound(false);
   handleUpdateChat = dataObj => this.addMsg(dataObj);
+  handlePickedDifficulty = difficulty => {
+    this.setState({ wordDifficulty: difficulty });
+
+    window.setTimeout(() => {
+      this.setState({ wordDifficulty: '' });
+    }, 2000);
+  };
 
   handleRoomPlaying = ({ roomInfo, id }) => {
-    this.setState({ roomInfo, id });
+    this.setState({ roomInfo, id, roomPlaying: true });
     const { users, currentDrawerIdx } = roomInfo;
     const currentDrawer = users[currentDrawerIdx];
     if (currentDrawer.id === id) {
@@ -126,6 +137,7 @@ class App extends Component {
     this.addToPreviousWords(randomWord);
     this.setPickDifficulty(false);
 
+    this.socket.emit('pickedDifficulty', difficulty);
     this.socket.emit('round ready');
   };
 
@@ -302,6 +314,7 @@ class App extends Component {
       showAlert,
       alertInfo,
       pickDifficulty,
+      wordDifficulty,
       currentWord,
       isDrawer,
       preRound,
@@ -320,6 +333,7 @@ class App extends Component {
         showAlert={showAlert}
         alertInfo={alertInfo}
         pickDifficulty={pickDifficulty}
+        wordDifficulty={wordDifficulty}
         currentWord={currentWord}
         isDrawer={isDrawer}
         preRound={preRound}
