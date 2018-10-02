@@ -72,7 +72,7 @@ class App extends Component {
     socket.on('room playing', this.handleRoomPlaying);
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
     socket.on('endPreRound', this.handleEndPreRound);
-    socket.on('startGameRound');
+    socket.on('startGameRound', this.handleStartGameRound);
     socket.on('pickedDifficulty', this.handlePickedDifficulty);
   };
 
@@ -85,6 +85,11 @@ class App extends Component {
     window.setTimeout(() => {
       this.setState({ wordDifficulty: '' });
     }, 2000);
+  };
+
+  handleStartGameRound = () => {
+    this.setPreRound(false);
+    this.setGameRound(true);
   };
 
   handleRoomPlaying = ({ roomInfo, id }) => {
