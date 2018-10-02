@@ -71,6 +71,7 @@ class App extends Component {
     socket.on('updateChat', this.handleUpdateChat);
     socket.on('room playing', this.handleRoomPlaying);
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
+    socket.on('updateGameRoundSeconds', this.handleUpdateGameRoundSeconds);
     socket.on('endPreRound', this.handleEndPreRound);
     socket.on('startGameRound', this.handleStartGameRound);
     socket.on('pickedDifficulty', this.handlePickedDifficulty);
@@ -92,10 +93,13 @@ class App extends Component {
     this.setGameRound(true);
   };
 
+  handleUpdateGameRoundSeconds = roomInfo => this.setRoomInfo(roomInfo);
+
   handleRoomPlaying = ({ roomInfo, id }) => {
     this.setState({ roomInfo, id, roomPlaying: true });
-    const { users, currentDrawerIdx } = roomInfo;
-    const currentDrawer = users[currentDrawerIdx];
+
+    const { usersPlaying, currentDrawerIdx } = roomInfo;
+    const currentDrawer = usersPlaying[currentDrawerIdx];
     if (currentDrawer.id === id) {
       this.setState({ isDrawer: true });
       this.setPickDifficulty(true);
@@ -175,6 +179,8 @@ class App extends Component {
 
   // SETTERS
   setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
+
+  setRoomInfo = roomInfo => this.setState({ roomInfo });
 
   setCurrentColor = color => this.setState({ currentColor: color });
 

@@ -52,15 +52,17 @@ export default function GameRoom({
         handleStartRoundClick={handleStartRoundClick}
       />
       {preRound ? (
-        isDrawer ? (
-          <h3>Time left to become familiar with card: </h3>
-        ) : (
-          <h3>Time left for drawer to become familliar with card: </h3>
-        )
+        <div>
+          {isDrawer ? (
+            <h3>Time left to become familiar with card: </h3>
+          ) : (
+            <h3>Time left for drawer to become familliar with card: </h3>
+          )}
+          <TimeLeft seconds={seconds} />
+        </div>
       ) : gameRound ? (
         <h3>Time left until round ends: </h3>
       ) : null}
-      <TimeLeft seconds={seconds} />
       {children}
     </div>
   );

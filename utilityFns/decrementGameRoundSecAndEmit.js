@@ -17,5 +17,5 @@ module.exports = (socket, roomInfo) => () => {
 
   return socket.broadcast
     .to(room)
-    .emit('updateGameRoundSeconds', roomInfo.roundSeconds);
+    .emit('updateGameRoundSeconds', roomInfo);
 };
