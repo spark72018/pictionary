@@ -1,6 +1,6 @@
-const setRoomPlaying = (rooms, room, bool) => {
+const setRoomPlaying = (room, bool) => {
   try {
-    rooms[room].playing = bool;
+    room.playing = bool;
 
     return true;
   } catch (e) {

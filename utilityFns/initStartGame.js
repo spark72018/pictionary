@@ -6,15 +6,14 @@ const setUserDrawer = require('./setUserDrawer');
 const initStartGame = (socket, state) =>
   socket.on('start game', () => {
     const { id, room } = socket;
+    const roomInfo = state[room];
 
-    setRoomPlaying(state, room, true);
-    shuffleAndSetUsers(state, room);
-    setPreviousDrawerIndex(state[room], 0);
-    setUserDrawer(state[room].users, id, true);
+    setRoomPlaying(roomInfo, true);
+    shuffleAndSetUsers(roomInfo);
+    // setPreviousDrawerIndex(roomInfo, 0);
+    setUserDrawer(roomInfo.users, roomInfo.currentDrawerIdx, true);
 
-    socket.broadcast
-      .to(room)
-      .emit('room playing', { roomInfo: state[room], id });
+    return socket.broadcast.to(room).emit('room playing', { roomInfo, id });
   });
 
 module.exports = initStartGame;

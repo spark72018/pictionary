@@ -1,5 +1,5 @@
-const setUserDrawer = (arr, id, bool) => {
-  const user = arr.find(info => info.id === id);
+const setUserDrawer = (arr, idx, bool) => {
+  const user = arr[idx];
   user.drawer = bool;
 
   console.log('setUserDrawer called', user);

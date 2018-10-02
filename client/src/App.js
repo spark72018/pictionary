@@ -6,6 +6,7 @@ import ChatRoom from './components/ChatRoom';
 import TimeLeft from './components/TimeLeft';
 import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
+import getRandomElement from './utilityFns/getRandomElement';
 import {
   ROOM_NAMES,
   DEV_URL,
@@ -16,6 +17,18 @@ import {
 } from './constants';
 import './App.css';
 
+/* TODOS:
+- countdown for drawer to think about word (10 seconds)
+- or drawer can start round
+- after start round, drawer can draw
+- drawer can click chat room messages that are warm/close to answer
+- press finish round to finish
+- drawer can pick user that got correct answer
+- update user score
+- get next drawer
+- repeat
+*/
+
 class App extends Component {
   state = {
     askForUserName: false,
@@ -24,13 +37,16 @@ class App extends Component {
     roomInfo: null,
     msgs: [],
     previousWords: [],
+    // pickDifficulty: false,
+    pickDifficulty: true, // for dev
     drawing: false,
     currentColor: DEFAULT_COLOR,
     currentMouseCoords: {},
+    currentWord: '',
     intervalId: null,
-    seconds: 0,
     showAlert: false,
-    isDrawer: false,
+    // isDrawer: false,
+    isDrawer: true, // for dev
     alertInfo: {
       title: 'Unauthorized',
       text: 'You are not the drawer!'
@@ -52,71 +68,48 @@ class App extends Component {
     socket.on('room playing', this.handleRoomPlaying);
   };
 
+
+  // SOCKET HANDLERS
   handleRoomPlaying = ({ roomInfo, id }) => {
     this.setState({ roomInfo, id });
     const { users, currentDrawerIdx } = roomInfo;
     const currentDrawer = users[currentDrawerIdx];
     if (currentDrawer.id === id) {
       this.setState({ isDrawer: true });
+      this.setPickDifficulty(true);
     }
   };
 
-  startTimer = cb =>
-    cb
-      ? this.setState(
-          {
-            intervalId: window.setInterval(this.decrementSeconds, 1000)
-          },
-          cb
-        )
-      : this.setState({
-          intervalId: window.setInterval(this.decrementSeconds, 1000)
-        });
+  handleUpdateChat = dataObj => this.addMsg(dataObj);
 
-  stopTimer = () => window.clearInterval(this.state.intervalId);
+  handleJoinedRoom = roomInfo => {
+    console.log('handleJoinedRoom');
 
-  decrementSeconds = () => this.setState({ seconds: this.state.seconds - 1 });
-
-  addToPreviousWords = word => {
-    const { previousWords } = this.state;
-
-    return this.setState({ previousWords: [...previousWords, word] });
-  };
-
-  addMsg = msgData => {
-    const { msgs } = this.state;
-
-    if (msgs.length < 50) {
-      return this.setState({ msgs: [...msgs, msgData] });
-    } else {
-      const [head, ...tail] = msgs;
-
-      return this.setState({ msgs: [...tail, msgData] });
-    }
-  };
-
-  setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
-
-  setCurrentColor = color => this.setState({ currentColor: color });
-
-  setDrawing = bool => this.setState({ drawing: bool });
-
-  setAskForUserName = bool => this.setState({ askForUserName: bool });
-
-  setJoinRoomName = str => this.setState({ joinRoomName: str });
-
-  handleDrawing = () => {
-    console.log('handleDrawing');
-  };
-
-  showCannotStartGameAlert = () =>
-    this.setState({
-      showAlert: true,
-      alertInfo: {
-        title: 'Cannot start the game yet',
-        text: 'This game requires at least two players'
-      }
+    return this.setState({
+      joinedRoom: true,
+      roomInfo,
+      msgs: [
+        {
+          username: '',
+          time: getTime(),
+          msg: 'You have successfully joined!'
+        }
+      ]
     });
+  };
+
+
+  // CLICK HANDLERS
+  handlePickDifficultyClick = e => {
+    const { difficulty } = e.target.dataset;
+    const randomWord = this.pickRandomWordFrom(difficulty);
+
+    this.setState({ currentWord: randomWord });
+    this.addToPreviousWords(randomWord);
+    this.setPickDifficulty(false);
+
+    this.socket.emit('round ready');
+  };
 
   handleStartGameClick = e => {
     console.log('handleStartGameClick called');
@@ -130,24 +123,6 @@ class App extends Component {
 
   handleStartRoundClick = e => {
     console.log('handleStartRoundClick');
-  };
-
-  handleUpdateChat = dataObj => this.addMsg(dataObj);
-
-  handleJoinedRoom = roomInfo => {
-    console.log('handleJoinedRoom');
-
-    this.setState({
-      joinedRoom: true,
-      roomInfo,
-      msgs: [
-        {
-          username: '',
-          time: getTime(),
-          msg: 'You have successfully joined!'
-        }
-      ]
-    });
   };
 
   handleSubmit = (e, username) => {
@@ -173,50 +148,53 @@ class App extends Component {
     }
   };
 
-  handleMouseMoveBoard = (e, canvas) => {
-    const {
-      drawing,
-      currentMouseCoords: { x, y },
-      currentColor
-    } = this.state;
+  // SETTERS
+  setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
 
-    if (!drawing) return;
+  setCurrentColor = color => this.setState({ currentColor: color });
 
-    this.drawLine(x, y, e.clientX, e.clientY, currentColor, true, canvas);
+  setDrawing = bool => this.setState({ drawing: bool });
 
-    return this.setMouseCoords(e.clientX, e.clientY);
+  setAskForUserName = bool => this.setState({ askForUserName: bool });
+
+  setJoinRoomName = str => this.setState({ joinRoomName: str });
+
+  setPickDifficulty = bool => this.setState({ pickDifficulty: bool });
+
+  // FUNCTIONS THAT ADD TO STATE
+  addToPreviousWords = word => {
+    const { previousWords } = this.state;
+
+    return this.setState({ previousWords: [...previousWords, word] });
   };
 
-  handleMouseUpBoard = (e, canvas) => {
-    console.log('handleMouseUpBoard');
-    if (!this.state.drawing) return;
+  addMsg = msgData => {
+    const { msgs } = this.state;
 
-    this.setDrawing(false);
+    if (msgs.length < 50) {
+      return this.setState({ msgs: [...msgs, msgData] });
+    } else {
+      const [head, ...tail] = msgs;
 
-    const {
-      currentMouseCoords: { x, y },
-      currentColor
-    } = this.state;
-    return this.drawLine(
-      x,
-      y,
-      e.clientX,
-      e.clientY,
-      currentColor,
-      true,
-      canvas
-    );
+      return this.setState({ msgs: [...tail, msgData] });
+    }
   };
 
-  handleMouseDownBoard = e => {
-    this.setDrawing(true);
+  addToPreviousWords = word => {
+    const { previousWords } = this.state;
 
-    return this.setMouseCoords(e.clientX, e.clientY);
+    return this.setState({ previousWords: [...previousWords, word] });
   };
 
-  handleResize = e => {
-    console.log('handleResize called');
-  };
+  // miscellaneous 
+  showCannotStartGameAlert = () =>
+    this.setState({
+      showAlert: true,
+      alertInfo: {
+        title: 'Cannot start the game yet',
+        text: 'This game requires at least two players'
+      }
+    });
 
   emitDrawingInfo = (x0, y0, x1, y1, color, canvas) => {
     const w = canvas.width;
@@ -255,6 +233,54 @@ class App extends Component {
     return this.emitDrawingInfo(x0, y0, x1, y1, currentColor, canvas);
   };
 
+  pickRandomWordFrom = difficulty => {
+    const words = this.state[difficulty];
+    const word = getRandomElement(words);
+
+    return word;
+  };
+
+  // MOUSE MOVEMENT HANDLERS
+  handleMouseMoveBoard = (e, canvas) => {
+    const {
+      drawing,
+      currentMouseCoords: { x, y },
+      currentColor
+    } = this.state;
+
+    if (!drawing) return;
+
+    this.drawLine(x, y, e.clientX, e.clientY, currentColor, true, canvas);
+
+    return this.setMouseCoords(e.clientX, e.clientY);
+  };
+
+  handleMouseUpBoard = (e, canvas) => {
+    if (!this.state.drawing) return;
+
+    this.setDrawing(false);
+
+    const {
+      currentMouseCoords: { x, y },
+      currentColor
+    } = this.state;
+    return this.drawLine(
+      x,
+      y,
+      e.clientX,
+      e.clientY,
+      currentColor,
+      true,
+      canvas
+    );
+  };
+
+  handleMouseDownBoard = e => {
+    this.setDrawing(true);
+
+    return this.setMouseCoords(e.clientX, e.clientY);
+  };
+
   render() {
     const {
       askForUserName,
@@ -263,10 +289,11 @@ class App extends Component {
       msgs,
       seconds,
       showAlert,
-      alertInfo
+      alertInfo,
+      pickDifficulty,
+      currentWord,
+      isDrawer
     } = this.state;
-
-    console.log('roomInfo is', this.state.roomInfo);
 
     return !joinedRoom ? (
       <JoinRoom
@@ -280,8 +307,12 @@ class App extends Component {
         showAlert={showAlert}
         alertInfo={alertInfo}
         seconds={seconds}
+        pickDifficulty={pickDifficulty}
+        currentWord={currentWord}
+        isDrawer={isDrawer}
         handleStartGameClick={this.handleStartGameClick}
         handleStartRoundClick={this.handleStartRoundClick}
+        handlePickDifficultyClick={this.handlePickDifficultyClick}
       >
         <ChatRoom msgs={msgs} socket={this.socket} />
         <DrawingBoard
