@@ -53,7 +53,9 @@ class App extends Component {
     },
     easyWords: EASY_WORDS,
     mediumWords: MEDIUM_WORDS,
-    hardWords: HARD_WORDS
+    hardWords: HARD_WORDS,
+    preRound: false,
+    gameRound: false
   };
 
   socket = io(DEV_URL);
@@ -66,8 +68,8 @@ class App extends Component {
     socket.on('joined room', this.handleJoinedRoom);
     socket.on('updateChat', this.handleUpdateChat);
     socket.on('room playing', this.handleRoomPlaying);
+    socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
   };
-
 
   // SOCKET HANDLERS
   handleRoomPlaying = ({ roomInfo, id }) => {
@@ -79,8 +81,6 @@ class App extends Component {
       this.setPickDifficulty(true);
     }
   };
-
-  handleUpdateChat = dataObj => this.addMsg(dataObj);
 
   handleJoinedRoom = roomInfo => {
     console.log('handleJoinedRoom');
@@ -98,8 +98,23 @@ class App extends Component {
     });
   };
 
+  handleUpdatePreRoundSeconds = roomInfo => {
+    const { isDrawer } = this.state;
+  };
+
+  handleUpdateChat = dataObj => this.addMsg(dataObj);
 
   // CLICK HANDLERS
+  handleStartGameClick = e => {
+    console.log('handleStartGameClick called');
+    const { roomInfo } = this.state;
+    if (roomInfo.users.length < 2) {
+      return this.showCannotStartGameAlert();
+    }
+
+    this.socket.emit('start game');
+  };
+
   handlePickDifficultyClick = e => {
     const { difficulty } = e.target.dataset;
     const randomWord = this.pickRandomWordFrom(difficulty);
@@ -109,16 +124,6 @@ class App extends Component {
     this.setPickDifficulty(false);
 
     this.socket.emit('round ready');
-  };
-
-  handleStartGameClick = e => {
-    console.log('handleStartGameClick called');
-    const { roomInfo } = this.state;
-    if (roomInfo.users.length < 2) {
-      return this.showCannotStartGameAlert();
-    }
-
-    this.socket.emit('start game');
   };
 
   handleStartRoundClick = e => {
@@ -186,7 +191,7 @@ class App extends Component {
     return this.setState({ previousWords: [...previousWords, word] });
   };
 
-  // miscellaneous 
+  // miscellaneous
   showCannotStartGameAlert = () =>
     this.setState({
       showAlert: true,

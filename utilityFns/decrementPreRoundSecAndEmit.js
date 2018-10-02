@@ -14,7 +14,5 @@ module.exports = (socket, roomInfo) => () => {
     return endPreRound(socket, roomInfo);
   }
 
-  return socket.broadcast
-    .to(room)
-    .emit('updatePreRoundSeconds', roomInfo.preRoundSeconds);
+  return socket.broadcast.to(room).emit('updatePreRoundSeconds', roomInfo);
 };
