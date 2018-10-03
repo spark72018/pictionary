@@ -158,9 +158,10 @@ class App extends Component {
 
   handleSubmit = (e, username) => {
     e.preventDefault();
+
     const { joinRoomName } = this.state;
 
-    this.socket.emit('join room', {
+    return this.socket.emit('join room', {
       username,
       joinRoomName,
       time: getTime()
@@ -168,9 +169,6 @@ class App extends Component {
   };
 
   handleEndGameRound = () => this.setAskForWinner(true);
-  // if(isDrawer) can pick winner
-  // else 'Drawer is picking the winner...'
-  // emit 'pickedWinner' to socket;
 
   handleRoomItemClick = e => {
     const joinRoomName = e.target.innerText;
@@ -182,6 +180,10 @@ class App extends Component {
     } else if (joinRoomName === 'Wine Room') {
       return this.setJoinRoomName('wineRoom');
     }
+  };
+
+  handlePickWinnerClick = e => {
+    console.log('handlePickWinnerClick', e.target);
   };
 
   // SETTERS
@@ -329,6 +331,7 @@ class App extends Component {
   render() {
     const {
       askForUserName,
+      askForWinner,
       joinRoomName,
       joinedRoom,
       msgs,
@@ -361,10 +364,13 @@ class App extends Component {
         preRound={preRound}
         gameRound={gameRound}
         roomInfo={roomInfo}
+        askForUserName={askForUserName}
+        askForWinner={askForWinner}
         setShowAlert={this.setShowAlert}
         handleStartGameClick={this.handleStartGameClick}
         handleStartRoundClick={this.handleStartRoundClick}
         handlePickDifficultyClick={this.handlePickDifficultyClick}
+        handlePickWinnerClick={this.handlePickWinnerClick}
       >
         <ChatRoom msgs={msgs} socket={this.socket} />
         <DrawingBoard
