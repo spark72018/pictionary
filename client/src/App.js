@@ -70,11 +70,12 @@ class App extends Component {
     socket.on('joined room', this.handleJoinedRoom);
     socket.on('updateChat', this.handleUpdateChat);
     socket.on('room playing', this.handleRoomPlaying);
+    socket.on('pickedDifficulty', this.handlePickedDifficulty);
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
     socket.on('updateGameRoundSeconds', this.handleUpdateGameRoundSeconds);
     socket.on('endPreRound', this.handleEndPreRound);
     socket.on('startGameRound', this.handleStartGameRound);
-    socket.on('pickedDifficulty', this.handlePickedDifficulty);
+    socket.on('endGameRound', this.handleEndGameRound);
   };
 
   // SOCKET HANDLERS
@@ -100,6 +101,7 @@ class App extends Component {
 
     const { usersPlaying, currentDrawerIdx } = roomInfo;
     const currentDrawer = usersPlaying[currentDrawerIdx];
+
     if (currentDrawer.id === id) {
       this.setState({ isDrawer: true });
       this.setPickDifficulty(true);
@@ -196,6 +198,8 @@ class App extends Component {
 
   setGameRound = bool => this.setState({ gameRound: bool });
 
+  setShowAlert = bool => this.setState({ showAlert: bool });
+
   // FUNCTIONS THAT ADD TO STATE
   addToPreviousWords = word => {
     const { previousWords } = this.state;
@@ -246,7 +250,6 @@ class App extends Component {
   };
 
   drawLine = (x0, y0, x1, y1, color, emit, canvas) => {
-    console.log('drawLine called');
     const cxt = canvas.getContext('2d');
     const adjustedY0 = y0 - canvas.getBoundingClientRect().top;
     const adjustedY1 = y1 - canvas.getBoundingClientRect().top;
@@ -329,7 +332,8 @@ class App extends Component {
       currentWord,
       isDrawer,
       preRound,
-      gameRound
+      gameRound,
+      roomInfo
     } = this.state;
 
     return !joinedRoom ? (
@@ -349,6 +353,8 @@ class App extends Component {
         isDrawer={isDrawer}
         preRound={preRound}
         gameRound={gameRound}
+        roomInfo={roomInfo}
+        setShowAlert={this.setShowAlert}
         handleStartGameClick={this.handleStartGameClick}
         handleStartRoundClick={this.handleStartRoundClick}
         handlePickDifficultyClick={this.handlePickDifficultyClick}

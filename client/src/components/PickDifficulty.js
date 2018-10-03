@@ -1,7 +1,10 @@
 import React from 'react';
 
-export default function PickDifficulty({ handlePickDifficultyClick }) {
-  return (
+export default function PickDifficulty({
+  pickDifficulty,
+  handlePickDifficultyClick
+}) {
+  return pickDifficulty ? (
     <ul className="pick-difficulty">
       <li onClick={handlePickDifficultyClick} data-difficulty={'easyWords'}>
         Easy Word
@@ -13,5 +16,5 @@ export default function PickDifficulty({ handlePickDifficultyClick }) {
         Hard Word
       </li>
     </ul>
-  );
+  ) : null;
 }
