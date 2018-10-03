@@ -32,6 +32,7 @@ import './App.css';
 class App extends Component {
   state = {
     askForUserName: false,
+    askForWinner: false,
     joinRoomName: '',
     joinedRoom: false,
     roomInfo: null,
@@ -74,6 +75,7 @@ class App extends Component {
     socket.on('updatePreRoundSeconds', this.handleUpdatePreRoundSeconds);
     socket.on('updateGameRoundSeconds', this.handleUpdateGameRoundSeconds);
     socket.on('endPreRound', this.handleEndPreRound);
+    socket.on('endGameRound', this.handleEndGameRound);
     socket.on('startGameRound', this.handleStartGameRound);
     socket.on('endGameRound', this.handleEndGameRound);
   };
@@ -109,8 +111,6 @@ class App extends Component {
   };
 
   handleJoinedRoom = roomInfo => {
-    console.log('handleJoinedRoom');
-
     return this.setState({
       joinedRoom: true,
       roomInfo,
@@ -167,6 +167,11 @@ class App extends Component {
     });
   };
 
+  handleEndGameRound = () => this.setAskForWinner(true);
+  // if(isDrawer) can pick winner
+  // else 'Drawer is picking the winner...'
+  // emit 'pickedWinner' to socket;
+
   handleRoomItemClick = e => {
     const joinRoomName = e.target.innerText;
 
@@ -199,6 +204,8 @@ class App extends Component {
   setGameRound = bool => this.setState({ gameRound: bool });
 
   setShowAlert = bool => this.setState({ showAlert: bool });
+
+  setAskForWinner = bool => this.setState({ askForWinner: bool });
 
   // FUNCTIONS THAT ADD TO STATE
   addToPreviousWords = word => {
