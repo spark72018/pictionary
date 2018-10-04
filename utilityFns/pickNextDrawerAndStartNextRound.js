@@ -3,6 +3,7 @@ const pickNextDrawer = require('./pickNextDrawer');
 const shuffleAndSetUsers = require('./shuffleAndSetUsers');
 const setCurrentDrawerIndex = require('./setCurrentDrawerIndex');
 const setUserDrawer = require('./setUserDrawer');
+const updateUsersPlaying = require('./updateUsersPlaying');
 
 module.exports = (socket, roomInfo) => () => {
   const { id } = socket;
@@ -16,6 +17,7 @@ module.exports = (socket, roomInfo) => () => {
 
   setUserDrawer(usersPlaying, previousDrawerIdx, false);
   setUserDrawer(usersPlaying, nextDrawerIdx, true);
+  updateUsersPlaying(roomInfo); // add any users who joined in middle of round
   setCurrentDrawerIndex(roomInfo, nextDrawerIdx);
 
   return socket.broadcast.to(room).emit('room playing', { roomInfo, id });
