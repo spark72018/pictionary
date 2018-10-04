@@ -325,15 +325,8 @@ class App extends Component {
     return this.setMouseCoords(e.clientX, e.clientY);
   };
 
-  
-
-  render() {
+  makeGameRoomProps = () => {
     const {
-      askForUserName,
-      askForWinner,
-      joinRoomName,
-      joinedRoom,
-      msgs,
       showAlert,
       alertInfo,
       pickDifficulty,
@@ -342,8 +335,32 @@ class App extends Component {
       isDrawer,
       preRound,
       gameRound,
-      roomInfo
+      roomInfo,
+      askForWinner,
+      setShowAlert
     } = this.state;
+
+    return {
+      showAlert,
+      alertInfo,
+      pickDifficulty,
+      wordDifficulty,
+      currentWord,
+      isDrawer,
+      preRound,
+      gameRound,
+      roomInfo,
+      askForWinner,
+      setShowAlert: this.setShowAlert,
+      handleStartGameClick: this.handleStartGameClick,
+      handleStartRoundClick: this.handleStartRoundClick,
+      handlePickDifficultyClick: this.handlePickDifficultyClick,
+      handlePickWinnerClick: this.handlePickWinnerClick
+    };
+  };
+
+  render() {
+    const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
 
     return !joinedRoom ? (
       <JoinRoom
@@ -353,23 +370,7 @@ class App extends Component {
         handleSubmit={this.handleSubmit}
       />
     ) : (
-      <GameRoom
-        showAlert={showAlert}
-        alertInfo={alertInfo}
-        pickDifficulty={pickDifficulty}
-        wordDifficulty={wordDifficulty}
-        currentWord={currentWord}
-        isDrawer={isDrawer}
-        preRound={preRound}
-        gameRound={gameRound}
-        roomInfo={roomInfo}
-        askForWinner={askForWinner}
-        setShowAlert={this.setShowAlert}
-        handleStartGameClick={this.handleStartGameClick}
-        handleStartRoundClick={this.handleStartRoundClick}
-        handlePickDifficultyClick={this.handlePickDifficultyClick}
-        handlePickWinnerClick={this.handlePickWinnerClick}
-      >
+      <GameRoom {...this.makeGameRoomProps()}>
         <ChatRoom msgs={msgs} socket={this.socket} />
         <DrawingBoard
           handleMouseMove={this.handleMouseMoveBoard}
