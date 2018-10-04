@@ -1,18 +1,39 @@
-export default ({ askForWinner, isDrawer, usersPlaying }) =>
-  askForWinner ? (
+export default ({
+  askForWinner,
+  isDrawer,
+  usersPlaying,
+  handlePickWinnerClick
+}) => {
+  return askForWinner ? (
     <div className="pick-winner-container">
       {isDrawer ? (
-        <ul className="pick-winner-list">{usersPlaying.map(makeWinnerItem)}</ul>
+        <ul className="pick-winner-list">{makePickWinnerList(usersPlaying)}</ul>
       ) : (
         <h2>Drawer is picking the winner of this round.</h2>
       )}
     </div>
   ) : null;
+};
 
-function makeWinnerItem(username, idx) {
-  return <li key={`pickwinner${idx}`}>{username}</li>;
+function makePickWinnerList(userList) {
+  const noWinnerItem = (
+    <li key="noWinner" data-id={null} onClick={handlePickWinnerClick}>
+      No one got it.
+    </li>
+  );
+  const playerList = userList.map(makeWinnerItem);
+
+  return [...playerList, noWinnerItem];
 }
 
-// if(isDrawer) can pick winner
-// else 'Drawer is picking the winner...'
-// emit 'pickedWinner' to socket;
+function makeWinnerItem(userInfo, idx) {
+  return (
+    <li
+      key={`pickwinner${idx}`}
+      data-id={userInfo.id}
+      onClick={handlePickWinnerClick}
+    >
+      {userInfo.name}
+    </li>
+  );
+}

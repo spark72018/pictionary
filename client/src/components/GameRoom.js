@@ -40,6 +40,7 @@ export default function GameRoom({
         askForWinner={askForWinner}
         isDrawer={isDrawer}
         usersPlaying={usersPlaying}
+        handlePickWinnerClick={handlePickWinnerClick}
       />
       <SweetAlert
         showAlert={showAlert}

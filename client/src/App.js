@@ -17,17 +17,9 @@ import {
 } from './constants';
 import './App.css';
 
-/* TODOS:
-- countdown for drawer to think about word (10 seconds)
-- or drawer can start round
-- after start round, drawer can draw
-- drawer can click chat room messages that are warm/close to answer
-- press finish round to finish
-- drawer can pick user that got correct answer
-- update user score
-- get next drawer
-- repeat
-*/
+// When user joins room, if(roomInfo.playing) and !roomInfo.usersPlaying.find(info => info.id === myId)
+// then user is spectator
+// Also handle when next round begins, so user can join game
 
 class App extends Component {
   state = {
@@ -38,7 +30,6 @@ class App extends Component {
     roomInfo: null,
     msgs: [],
     previousWords: [],
-    roomPlaying: false,
     // pickDifficulty: false,
     pickDifficulty: true, // for dev
     drawing: false,
@@ -78,6 +69,7 @@ class App extends Component {
     socket.on('endGameRound', this.handleEndGameRound);
     socket.on('startGameRound', this.handleStartGameRound);
     socket.on('endGameRound', this.handleEndGameRound);
+    socket.on('announceWinner', this.handleAnnounceWinner);
   };
 
   // SOCKET HANDLERS
@@ -99,7 +91,7 @@ class App extends Component {
   handleUpdateGameRoundSeconds = roomInfo => this.setRoomInfo(roomInfo);
 
   handleRoomPlaying = ({ roomInfo, id }) => {
-    this.setState({ roomInfo, id, roomPlaying: true });
+    this.setState({ roomInfo, id });
 
     const { usersPlaying, currentDrawerIdx } = roomInfo;
     const currentDrawer = usersPlaying[currentDrawerIdx];
@@ -184,6 +176,11 @@ class App extends Component {
 
   handlePickWinnerClick = e => {
     console.log('handlePickWinnerClick', e.target);
+    this.setAskForWinner(false);
+
+    const { id } = e.target.dataset;
+
+    return this.socket.emit('pickedWinner', id);
   };
 
   // SETTERS
@@ -328,6 +325,8 @@ class App extends Component {
     return this.setMouseCoords(e.clientX, e.clientY);
   };
 
+  
+
   render() {
     const {
       askForUserName,
@@ -364,7 +363,6 @@ class App extends Component {
         preRound={preRound}
         gameRound={gameRound}
         roomInfo={roomInfo}
-        askForUserName={askForUserName}
         askForWinner={askForWinner}
         setShowAlert={this.setShowAlert}
         handleStartGameClick={this.handleStartGameClick}

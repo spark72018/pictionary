@@ -4,11 +4,14 @@ const pickNextDrawerAndStartNextRound = require('./pickNextDrawerAndStartNextRou
 module.exports = (socket, state) =>
   socket.on('pickedWinner', winnerId => {
     const { room } = socket;
+
     if (winnerId) {
       // give winner a point, pick next drawer and start preRound
       giveUserOnePoint(state[room], winnerId);
 
       socket.broadcast.to(room).emit('announceWinner', winnerId);
+    } else {
+      socket.broadcast.to(room).emit('announceWinner', null);
     }
 
     return setTimeout(pickNextDrawerAndStartNextRound(socket, state), 3000);
