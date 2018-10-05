@@ -1,4 +1,6 @@
-export default ({ wordDifficulty }) =>
+import React from 'react';
+
+export default ({isDrawer, pickDifficulty, wordDifficulty }) =>
   wordDifficulty ? (
     <div className="word-difficulty">
       <h2>{`Drawer has picked ${

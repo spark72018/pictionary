@@ -2,7 +2,8 @@ const decrementPreRoundSecondsByOne = require('./decrementPreRoundSecondsByOne')
 const endPreRound = require('./endPreRound');
 const isZero = require('./isZero');
 
-module.exports = (socket, roomInfo) => () => {
+module.exports = (socket, roomInfo, io) => () => {
+  console.log('decrementPreRoundSecAndEmit called');
   const { room } = socket;
   decrementPreRoundSecondsByOne(roomInfo);
 
@@ -11,8 +12,10 @@ module.exports = (socket, roomInfo) => () => {
   const roundEnds = isZero(roomInfo.preRoundSeconds);
 
   if (roundEnds) {
-    return endPreRound(socket, roomInfo);
+    return endPreRound(socket, roomInfo, io);
   }
 
-  return socket.broadcast.to(room).emit('updatePreRoundSeconds', roomInfo);
+  return io.sockets.in(room).emit('updatePreRoundSeconds', roomInfo);
+  // socket.emit('updatePreRoundSeconds', roomInfo);
+  // return socket.broadcast.to(room).emit('updatePreRoundSeconds', roomInfo);
 };

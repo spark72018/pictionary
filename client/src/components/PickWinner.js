@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default ({
   askForWinner,
   isDrawer,
@@ -7,7 +9,9 @@ export default ({
   return askForWinner ? (
     <div className="pick-winner-container">
       {isDrawer ? (
-        <ul className="pick-winner-list">{makePickWinnerList(usersPlaying)}</ul>
+        <ul className="pick-winner-list">
+          {makePickWinnerList(usersPlaying, handlePickWinnerClick)}
+        </ul>
       ) : (
         <h2>Drawer is picking the winner of this round.</h2>
       )}
@@ -15,25 +19,24 @@ export default ({
   ) : null;
 };
 
-function makePickWinnerList(userList) {
+function makePickWinnerList(userList, clickHandler) {
+  const makeWinnerItem = withHandler(clickHandler);
+  const playerList = userList.map(makeWinnerItem);
   const noWinnerItem = (
-    <li key="noWinner" data-id={null} onClick={handlePickWinnerClick}>
+    <li key="noWinner" data-id={null} onClick={clickHandler}>
       No one got it.
     </li>
   );
-  const playerList = userList.map(makeWinnerItem);
 
   return [...playerList, noWinnerItem];
 }
 
-function makeWinnerItem(userInfo, idx) {
-  return (
-    <li
-      key={`pickwinner${idx}`}
-      data-id={userInfo.id}
-      onClick={handlePickWinnerClick}
-    >
-      {userInfo.name}
-    </li>
-  );
+function withHandler(clickHandler) {
+  return function(userInfo, idx) {
+    return (
+      <li key={`pickwinner${idx}`} data-id={userInfo.id} onClick={clickHandler}>
+        {userInfo.name}
+      </li>
+    );
+  };
 }

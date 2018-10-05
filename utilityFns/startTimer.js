@@ -1,4 +1,5 @@
 module.exports = (cb, delay, property) => state => {
+  console.log('startTimer called');
   try {
     state[property] = setInterval(cb, delay);
 

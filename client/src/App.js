@@ -27,19 +27,21 @@ class App extends Component {
     askForWinner: false,
     joinRoomName: '',
     joinedRoom: false,
+    socketId: '',
     roomInfo: null,
     msgs: [],
+    amSpectator: false,
     previousWords: [],
-    // pickDifficulty: false,
-    pickDifficulty: true, // for dev
+    pickDifficulty: false,
+    // pickDifficulty: true, // for dev
     drawing: false,
     currentColor: DEFAULT_COLOR,
     currentMouseCoords: {},
     currentWord: '',
     intervalId: null,
     showAlert: false,
-    // isDrawer: false,
-    isDrawer: true, // for dev
+    isDrawer: false,
+    // isDrawer: true, // for dev
     alertInfo: {
       title: 'Unauthorized',
       text: 'You are not the drawer!'
@@ -60,6 +62,7 @@ class App extends Component {
 
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
+    socket.on('yourSocketId', this.handleYourSocketId);
     socket.on('updateChat', this.handleUpdateChat);
     socket.on('room playing', this.handleRoomPlaying);
     socket.on('pickedDifficulty', this.handlePickedDifficulty);
@@ -70,18 +73,26 @@ class App extends Component {
     socket.on('startGameRound', this.handleStartGameRound);
     socket.on('endGameRound', this.handleEndGameRound);
     socket.on('announceWinner', this.handleAnnounceWinner);
+    socket.on('error', this.handleSocketError);
+    // TODO
+    // socket.on('userLeft', this.handleUserLeft);
   };
 
   // SOCKET HANDLERS
+  handleSocketError = e => console.error(e);
   handleEndPreRound = () => this.setPreRound(false);
   handleUpdateChat = dataObj => this.addMsg(dataObj);
   handlePickedDifficulty = difficulty => {
+    console.log('pickedDifficulty socket event', difficulty);
+    this.setPickDifficulty(false);
     this.setState({ wordDifficulty: difficulty });
 
     window.setTimeout(() => {
       this.setState({ wordDifficulty: '' });
-    }, 2000);
+    }, 3000);
   };
+
+  handleYourSocketId = id => this.setState({ socketId: id });
 
   handleStartGameRound = () => {
     this.setPreRound(false);
@@ -90,29 +101,44 @@ class App extends Component {
 
   handleUpdateGameRoundSeconds = roomInfo => this.setRoomInfo(roomInfo);
 
-  handleRoomPlaying = ({ roomInfo, id }) => {
-    this.setState({ roomInfo, id });
+  handleRoomPlaying = roomInfo => {
+    console.log('handleRoomPlaying', roomInfo);
+    const { socketId } = this.state;
+    this.setState({ roomInfo });
 
     const { usersPlaying, currentDrawerIdx } = roomInfo;
     const currentDrawer = usersPlaying[currentDrawerIdx];
 
-    if (currentDrawer.id === id) {
+    console.log('handleRoomPlaying id', socketId);
+    console.log('handleRoomPlaying currentDrawer info', currentDrawer);
+
+    if (currentDrawer.id === socketId) {
       this.setState({ isDrawer: true });
-      this.setPickDifficulty(true);
     }
+    this.setPickDifficulty(true);
   };
 
-  handleJoinedRoom = roomInfo => {
-    return this.setState({
-      joinedRoom: true,
-      roomInfo,
-      msgs: [
-        {
-          username: '',
-          time: getTime(),
-          msg: 'You have successfully joined!'
+  handleJoinedRoom = ({ id, roomInfo }) => {
+    const isMe = this.state.socketId === id;
+    const inUsersPlaying = roomInfo.usersPlaying.find(user => user.id === id);
+    const includedInRound = !roomInfo.playing && inUsersPlaying;
+    const isMeInfo = isMe
+      ? {
+          joinedRoom: true,
+          msgs: [
+            {
+              username: '',
+              time: getTime(),
+              msg: 'You have successfully joined!'
+            }
+          ]
         }
-      ]
+      : {};
+
+    return this.setState({
+      roomInfo,
+      amSpectator: includedInRound ? true : false,
+      ...isMeInfo
     });
   };
 
@@ -125,7 +151,9 @@ class App extends Component {
   handleStartGameClick = e => {
     console.log('handleStartGameClick called');
     const { roomInfo } = this.state;
+    console.log('roomInfo.users', roomInfo.users);
     if (roomInfo.users.length < 2) {
+      console.log('not enough users');
       return this.showCannotStartGameAlert();
     }
 
@@ -320,6 +348,8 @@ class App extends Component {
   };
 
   handleMouseDownBoard = e => {
+    if (!this.state.isDrawer) return;
+
     this.setDrawing(true);
 
     return this.setMouseCoords(e.clientX, e.clientY);

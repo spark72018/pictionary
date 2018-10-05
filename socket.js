@@ -7,6 +7,7 @@ const removeFromUsersPlaying = require('./utilityFns/removeFromUsersPlaying');
 module.exports = app => {
   const http = require('http').Server(app);
   const io = require('socket.io')(http);
+  // io.set('transports', ['websocket']);
 
   io.on('connection', socket => {
     console.log('user connected with id', socket.id);
@@ -15,13 +16,17 @@ module.exports = app => {
 
     socket.on('disconnect', () => {
       const { id, room } = socket;
+      console.log('left room', id);
+      if (room) {
+        const roomInfo = rooms[room];
 
-      removeUser(roomInfo, id);
-      removeFromUsersPlaying(roomInfo, id);
+        removeUser(roomInfo, id);
+        removeFromUsersPlaying(roomInfo, id);
 
-      // client should find id, announce that id/name left, then set new state
-      // with user removed
-      return socket.broadcast.to(room).emit('userLeft', id, roomInfo);
+        // client should find id, announce that id/name left, then set new state
+        // with user removed
+        return socket.broadcast.to(room).emit('userLeft', id, roomInfo);
+      }
     });
   });
 

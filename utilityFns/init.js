@@ -7,12 +7,12 @@ const initRoundWinner = require('./initRoundWinner');
 const initPickedDifficulty = require('./initPickedDifficulty');
 
 const init = (socket, state, io) => {
-  initJoinRoom(socket, state);
+  initJoinRoom(socket, state, io);
   initSendMessage(socket, io);
-  initStartGame(socket, state);
+  initStartGame(socket, state, io);
   initDrawing(socket, io);
-  initRoundReady(socket, state);
-  initRoundWinner(socket, state);
+  initRoundReady(socket, state, io);
+  initRoundWinner(socket, state, io);
   initPickedDifficulty(socket);
 };
 

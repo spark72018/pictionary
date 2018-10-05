@@ -2,7 +2,8 @@ const decrementGameRoundSecondsByOne = require('./decrementGameRoundSecondsByOne
 const endGameRound = require('./endGameRound');
 const isZero = require('./isZero');
 
-module.exports = (socket, roomInfo) => () => {
+module.exports = (socket, roomInfo, io) => () => {
+  console.log('decrementGameRoundSecAndEmit called');
   const { room } = socket;
 
   decrementGameRoundSecondsByOne(roomInfo);
@@ -12,10 +13,7 @@ module.exports = (socket, roomInfo) => () => {
   const roundEnds = isZero(roomInfo.roundSeconds);
 
   if (roundEnds) {
-    return endGameRound(socket, roomInfo);
+    return endGameRound(socket, roomInfo, io);
   }
-
-  return socket.broadcast
-    .to(room)
-    .emit('updateGameRoundSeconds', roomInfo);
+  return io.sockets.in(room).emit('updateGameRoundSeconds', roomInfo);
 };

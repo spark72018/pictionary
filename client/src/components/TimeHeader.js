@@ -1,6 +1,7 @@
+import React from 'react';
 import TimeLeft from './TimeLeft';
 
-export default ({ preround, gameRound, isDrawer, seconds }) =>
+export default ({ preRound, gameRound, isDrawer, seconds }) =>
   preRound ? (
     <div className="time-container">
       {isDrawer ? (

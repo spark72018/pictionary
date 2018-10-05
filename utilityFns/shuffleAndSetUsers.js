@@ -6,3 +6,5 @@ const shuffleAndSetUsers = roomInfo => {
 
   roomInfo.usersPlaying = shuffledUsers;
 };
+
+module.exports = shuffleAndSetUsers;
