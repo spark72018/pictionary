@@ -5,6 +5,7 @@ import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
 import WordDifficultyHeader from './WordDifficultyHeader';
 import CurrentWordHeader from './CurrentWordHeader';
+import RoundWinner from './RoundWinner';
 import SweetAlert from 'sweetalert2-react';
 
 export default function GameRoom({
