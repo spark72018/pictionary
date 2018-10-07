@@ -3,6 +3,7 @@ const pickNextDrawerAndStartNextRound = require('./pickNextDrawerAndStartNextRou
 
 module.exports = (socket, state, io) =>
   socket.on('pickedWinner', winnerId => {
+    console.log('socket pickedWinner event');
     const { room } = socket;
     const roomInfo = state[room];
 

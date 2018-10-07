@@ -1,4 +1,3 @@
-// imports
 const pickNextDrawer = require('./pickNextDrawer');
 const shuffleAndSetUsers = require('./shuffleAndSetUsers');
 const setCurrentDrawerIndex = require('./setCurrentDrawerIndex');
@@ -22,5 +21,4 @@ module.exports = (socket, roomInfo, io) => () => {
   setCurrentDrawerIndex(roomInfo, nextDrawerIdx);
 
   return io.sockets.in(room).emit('room playing', roomInfo);
-  // return socket.broadcast.to(room).emit('room playing', { roomInfo, id });
 };

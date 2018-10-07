@@ -23,7 +23,7 @@ function makePickWinnerList(userList, clickHandler) {
   const makeWinnerItem = withHandler(clickHandler);
   const playerList = userList.map(makeWinnerItem);
   const noWinnerItem = (
-    <li key="noWinner" data-id={null} onClick={clickHandler}>
+    <li key="noWinner" data-id="" onClick={clickHandler}>
       No one got it.
     </li>
   );

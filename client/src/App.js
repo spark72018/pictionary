@@ -40,6 +40,7 @@ class App extends Component {
     currentWord: '',
     intervalId: null,
     showAlert: false,
+    showWinner: false,
     isDrawer: false,
     // isDrawer: true, // for dev
     alertInfo: {
@@ -90,6 +91,10 @@ class App extends Component {
     window.setTimeout(() => {
       this.setState({ wordDifficulty: '' });
     }, 3000);
+  };
+
+  handleAnnounceWinner = winnerId => {
+    this.setAskForWinner(false);
   };
 
   handleYourSocketId = id => this.setState({ socketId: id });
