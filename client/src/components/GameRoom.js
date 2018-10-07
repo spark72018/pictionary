@@ -6,6 +6,7 @@ import PickWinner from './PickWinner';
 import WordDifficultyHeader from './WordDifficultyHeader';
 import CurrentWordHeader from './CurrentWordHeader';
 import RoundWinner from './RoundWinner';
+import CurrentDrawer from './CurrentDrawer';
 import SweetAlert from 'sweetalert2-react';
 
 export default function GameRoom({
@@ -19,6 +20,8 @@ export default function GameRoom({
   preRound,
   gameRound,
   roomInfo,
+  showWinner,
+  winnerId,
   handleStartGameClick,
   handleStartRoundClick,
   handlePickDifficultyClick,
@@ -32,8 +35,15 @@ export default function GameRoom({
       ? roomInfo.roundSeconds
       : 0;
   const { usersPlaying } = roomInfo;
+  const winnerName = winnerId
+    ? usersPlaying.find(user => user.id === winnerId).name
+    : '';
   return (
     <div className="game-room">
+      <CurrentDrawer
+        announceWinner={announceWinner}
+        currentDrawerName={currentDrawerName}
+      />
       <WordDifficultyHeader
         isDrawer={isDrawer}
         pickDifficulty={pickDifficulty}
@@ -51,12 +61,7 @@ export default function GameRoom({
         usersPlaying={usersPlaying}
         handlePickWinnerClick={handlePickWinnerClick}
       />
-      <SweetAlert
-        showAlert={showAlert}
-        title={alertInfo.title}
-        text={alertInfo.text}
-        onConfirm={() => setShowAlert(false)}
-      />
+      <RoundWinner showWinner={showWinner} winnerName={winnerName} />
       <PickDifficulty
         isDrawer={isDrawer}
         pickDifficulty={pickDifficulty}
@@ -71,6 +76,12 @@ export default function GameRoom({
         gameRound={gameRound}
         isDrawer={isDrawer}
         seconds={seconds}
+      />
+      <SweetAlert
+        showAlert={showAlert}
+        title={alertInfo.title}
+        text={alertInfo.text}
+        onConfirm={() => setShowAlert(false)}
       />
       {children}
     </div>

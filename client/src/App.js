@@ -25,6 +25,8 @@ class App extends Component {
   state = {
     askForUserName: false,
     askForWinner: false,
+    announceDrawer: false,
+    currentDrawerName: '',
     joinRoomName: '',
     joinedRoom: false,
     socketId: '',
@@ -52,7 +54,8 @@ class App extends Component {
     mediumWords: MEDIUM_WORDS,
     hardWords: HARD_WORDS,
     preRound: false,
-    gameRound: false
+    gameRound: false,
+    winnerId: ''
   };
 
   socket = io(DEV_URL);
@@ -74,12 +77,30 @@ class App extends Component {
     socket.on('startGameRound', this.handleStartGameRound);
     socket.on('endGameRound', this.handleEndGameRound);
     socket.on('announceWinner', this.handleAnnounceWinner);
+    socket.on('announceDrawer', this.handleAnnounceDrawer);
     socket.on('error', this.handleSocketError);
     // TODO
     // socket.on('userLeft', this.handleUserLeft);
   };
 
+  setAnnounceDrawer = bool => this.setState({ announceDrawer: bool });
+
+  setCurrentDrawerName = str => this.setState({ currentDrawerName: str });
+
+  showCurrentDrawer = drawerName => {
+    this.setAnnounceDrawer(true);
+    this.setCurrentDrawerName(drawerName);
+  };
+
+  setWinnerId = winnerId => this.setState({ winnerId });
   // SOCKET HANDLERS
+  handleAnnounceDrawer = roomInfo => {
+    const { usersPlaying, currentDrawerIdx } = roomInfo;
+    const currentDrawer = usersPlaying[currentDrawerIdx];
+    const { name: drawerName } = currentDrawer;
+
+    this.showCurrentDrawer(drawerName);
+  };
   handleSocketError = e => console.error(e);
   handleEndPreRound = () => this.setPreRound(false);
   handleUpdateChat = dataObj => this.addMsg(dataObj);
@@ -94,7 +115,16 @@ class App extends Component {
   };
 
   handleAnnounceWinner = winnerId => {
+    console.log('handleAnnounceWinner winnerId', winnerId);
     this.setAskForWinner(false);
+    this.setShowWinner(true);
+    this.setWinnerId(winnerId);
+    this.setState({ currentWord: '' });
+
+    window.setTimeout(() => {
+      this.setShowWinner(false);
+      this.setWinnerId('');
+    }, 2000);
   };
 
   handleYourSocketId = id => this.setState({ socketId: id });
@@ -119,6 +149,8 @@ class App extends Component {
 
     if (currentDrawer.id === socketId) {
       this.setState({ isDrawer: true });
+    } else {
+      this.setState({ isDrawer: false });
     }
     this.setPickDifficulty(true);
   };
@@ -238,6 +270,8 @@ class App extends Component {
   setShowAlert = bool => this.setState({ showAlert: bool });
 
   setAskForWinner = bool => this.setState({ askForWinner: bool });
+
+  setShowWinner = bool => this.setState({ showWinner: bool });
 
   // FUNCTIONS THAT ADD TO STATE
   addToPreviousWords = word => {
@@ -367,11 +401,15 @@ class App extends Component {
       pickDifficulty,
       wordDifficulty,
       currentWord,
+      currentDrawerName,
       isDrawer,
       preRound,
       gameRound,
       roomInfo,
+      showWinner,
+      winnerId,
       askForWinner,
+      announceDrawer,
       setShowAlert
     } = this.state;
 
@@ -381,11 +419,15 @@ class App extends Component {
       pickDifficulty,
       wordDifficulty,
       currentWord,
+      currentDrawerName,
       isDrawer,
       preRound,
       gameRound,
       roomInfo,
       askForWinner,
+      showWinner,
+      winnerId,
+      announceDrawer,
       setShowAlert: this.setShowAlert,
       handleStartGameClick: this.handleStartGameClick,
       handleStartRoundClick: this.handleStartRoundClick,
@@ -393,6 +435,15 @@ class App extends Component {
       handlePickWinnerClick: this.handlePickWinnerClick
     };
   };
+
+  makeDrawingBoardProps = () => ({
+    handleMouseMove: this.handleMouseMoveBoard,
+    handleMouseDown: this.handleMouseDownBoard,
+    handleMouseUp: this.handleMouseUpBoard,
+    handleMouseOut: this.handleMouseUpBoard,
+    drawLine: this.drawLine,
+    socket: this.socket
+  });
 
   render() {
     const { askForUserName, joinRoomName, joinedRoom, msgs } = this.state;
@@ -407,14 +458,7 @@ class App extends Component {
     ) : (
       <GameRoom {...this.makeGameRoomProps()}>
         <ChatRoom msgs={msgs} socket={this.socket} />
-        <DrawingBoard
-          handleMouseMove={this.handleMouseMoveBoard}
-          handleMouseDown={this.handleMouseDownBoard}
-          handleMouseUp={this.handleMouseUpBoard}
-          handleMouseOut={this.handleMouseUpBoard}
-          drawLine={this.drawLine}
-          socket={this.socket}
-        />
+        <DrawingBoard {...this.makeDrawingBoardProps()} />
       </GameRoom>
     );
   }

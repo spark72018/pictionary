@@ -11,10 +11,13 @@ const initStartGame = (socket, state, io) =>
     setRoomPlaying(roomInfo, true);
     shuffleAndSetUsers(roomInfo);
     updateUsersPlaying(roomInfo);
-    setUserDrawer(roomInfo.usersPlaying, roomInfo.currentDrawerIdx, true);
+
+    const { usersPlaying, currentDrawerIdx } = roomInfo;
+    setUserDrawer(usersPlaying, currentDrawerIdx, true);
+
+    io.sockets.in(room).emit('announceDrawer', roomInfo);
 
     return io.sockets.in(room).emit('room playing', roomInfo);
-    // return socket.broadcast.to(room).emit('room playing', { roomInfo, id });
   });
 
 module.exports = initStartGame;
