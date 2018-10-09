@@ -1,16 +1,14 @@
 import React from 'react';
 import Start from './Start';
-import TimeHeader from './TimeHeader';
+import GameInfoHeader from './GameInfoHeader';
 import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
-import WordDifficultyHeader from './WordDifficultyHeader';
-import CurrentWordHeader from './CurrentWordHeader';
-import RoundWinner from './RoundWinner';
-import CurrentDrawer from './CurrentDrawer';
 import SweetAlert from 'sweetalert2-react';
 
 export default function GameRoom({
   askForWinner,
+  announceDrawer,
+  currentDrawerName,
   showAlert,
   alertInfo,
   pickDifficulty,
@@ -38,30 +36,22 @@ export default function GameRoom({
   const winnerName = winnerId
     ? usersPlaying.find(user => user.id === winnerId).name
     : '';
+
   return (
     <div className="game-room">
-      <CurrentDrawer
-        announceWinner={announceWinner}
-        currentDrawerName={currentDrawerName}
-      />
-      <WordDifficultyHeader
-        isDrawer={isDrawer}
-        pickDifficulty={pickDifficulty}
-        wordDifficulty={wordDifficulty}
-      />
-      <CurrentWordHeader
+      <GameInfoHeader
         preRound={preRound}
         gameRound={gameRound}
         isDrawer={isDrawer}
+        seconds={seconds}
+        announceDrawer={announceDrawer}
         currentWord={currentWord}
+        currentDrawerName={currentDrawerName}
+        pickDifficulty={pickDifficulty}
+        wordDifficulty={wordDifficulty}
+        showWinner={showWinner}
+        winnerName={winnerName}
       />
-      <PickWinner
-        askForWinner={askForWinner}
-        isDrawer={isDrawer}
-        usersPlaying={usersPlaying}
-        handlePickWinnerClick={handlePickWinnerClick}
-      />
-      <RoundWinner showWinner={showWinner} winnerName={winnerName} />
       <PickDifficulty
         isDrawer={isDrawer}
         pickDifficulty={pickDifficulty}
@@ -71,11 +61,11 @@ export default function GameRoom({
         handleStartGameClick={handleStartGameClick}
         handleStartRoundClick={handleStartRoundClick}
       />
-      <TimeHeader
-        preRound={preRound}
-        gameRound={gameRound}
+      <PickWinner
+        askForWinner={askForWinner}
         isDrawer={isDrawer}
-        seconds={seconds}
+        usersPlaying={usersPlaying}
+        handlePickWinnerClick={handlePickWinnerClick}
       />
       <SweetAlert
         showAlert={showAlert}

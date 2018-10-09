@@ -437,6 +437,7 @@ class App extends Component {
   };
 
   makeDrawingBoardProps = () => ({
+    isDrawer: this.state.isDrawer,
     handleMouseMove: this.handleMouseMoveBoard,
     handleMouseDown: this.handleMouseDownBoard,
     handleMouseUp: this.handleMouseUpBoard,
