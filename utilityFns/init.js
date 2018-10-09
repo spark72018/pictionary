@@ -5,6 +5,7 @@ const initDrawing = require('./initDrawing');
 const initRoundReady = require('./initRoundReady');
 const initRoundWinner = require('./initRoundWinner');
 const initPickedDifficulty = require('./initPickedDifficulty');
+const initClearBoard = require('./initClearBoard');
 
 const init = (socket, state, io) => {
   initJoinRoom(socket, state, io);
@@ -14,6 +15,7 @@ const init = (socket, state, io) => {
   initRoundReady(socket, state, io);
   initRoundWinner(socket, state, io);
   initPickedDifficulty(socket);
+  initClearBoard(socket);
 };
 
 module.exports = init;

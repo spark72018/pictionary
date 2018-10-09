@@ -9,6 +9,7 @@ export default class DrawingBoard extends Component {
     const { socket, handleDrawing } = this.props;
     const canvas = this.canvasRef.current;
 
+    socket.on('clearBoard', this.clearBoard);
     return socket.on('drawing', data => this.handleDrawing(data, canvas));
   }
 
@@ -28,15 +29,22 @@ export default class DrawingBoard extends Component {
     );
   };
 
-  // EMIT THE CLEARED BOARD TO EVERYONE ELSE TOO
-  handleClearBoardClick = () => {
-    if (!this.props.isDrawer) return;
+  clearBoard = () => {
     const canvas = this.canvasRef.current;
     const context = canvas.getContext('2d');
     const w = canvas.width;
     const h = canvas.width;
 
-    context.clearRect(0, 0, w, h);
+    return context.clearRect(0, 0, w, h);
+  };
+
+  // EMIT THE CLEARED BOARD TO EVERYONE ELSE TOO
+  handleClearBoardClick = () => {
+    if (!this.props.isDrawer) return;
+
+    this.props.socket.emit('clearBoard');
+
+    return this.clearBoard();
   };
 
   throttled = throttle(this.props.handleMouseMove, 10);
