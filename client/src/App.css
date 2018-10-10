@@ -1,11 +1,32 @@
+.game-room .chat-container,
+.game-room .canvas-container {
+    display: inline-block;
+}
+
+.chat-container {
+    display: inline-block;
+    width: 400px;
+}
+
+.chat-container input {
+    position: relative;
+    top: 390px;
+    width: 100%;
+}
+
 .rooms {
     background-color: red;
     list-style-type: none;
-
 }
 
 .rooms li {
     cursor: pointer;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .msg-time {
@@ -16,8 +37,67 @@
     list-style-type: none;
     max-height: 400px;
     overflow: auto;
+    overflow-x: hidden;
+    padding-left: 2px;
 }
 
 .message {
     margin: 0;
+}
+
+.game-header {
+    position: relative;
+    display: flex;
+    height: 60px;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.game-header h2 {
+    margin: 0;
+}
+
+.game-header h4 {
+    display: inline-block;
+    margin: 0;
+}
+
+.game-header div {
+    display: inline-block;
+}
+
+.game-room h2 {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.game-room .pick-winner-container {
+    background-color: yellow;
+    text-align: center;
+}
+
+.game-room .pick-difficulty-container {
+    background-color: blue;
+    text-align: center;
+}
+
+.game-room .pick-difficulty {
+    list-style-type: none;
+    background-color: red;
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    left: 40%;
+    padding-left: 0;
+}
+
+.game-room .pick-difficulty li {
+    background-color: blue;
+    margin-top: 2px;
+    height: 50px;
+}
+
+.game-header .start-buttons-container {
+    position: relative;
+    right: 0;
 }

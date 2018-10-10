@@ -66,8 +66,8 @@ export default class DrawingBoard extends Component {
           onMouseDown={handleMouseDown}
           onMouseOut={e => handleMouseOut(e, canvas)}
           ref={this.canvasRef}
-          width={400}
-          height={400}
+          width={450}
+          height={450}
           style={{ border: '1px solid #000000' }}
         />
         <button onClick={this.handleClearBoardClick}>Clear Board</button>

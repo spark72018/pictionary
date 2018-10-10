@@ -4,6 +4,7 @@ import CurrentDrawer from './CurrentDrawer';
 import WordDifficultyHeader from './WordDifficultyHeader';
 import CurrentWordHeader from './CurrentWordHeader';
 import RoundWinner from './RoundWinner';
+import Start from './Start';
 
 export default ({
   preRound,
@@ -16,19 +17,11 @@ export default ({
   pickDifficulty,
   wordDifficulty,
   showWinner,
-  winnerName
+  winnerName,
+  handleStartGameClick,
+  handleStartRoundClick
 }) => (
-  <React.Fragment>
-    <TimeHeader
-      preRound={preRound}
-      gameRound={gameRound}
-      isDrawer={isDrawer}
-      seconds={seconds}
-    />
-    <CurrentDrawer
-      announceDrawer={announceDrawer}
-      currentDrawerName={currentDrawerName}
-    />
+  <div className="game-header">
     <WordDifficultyHeader
       isDrawer={isDrawer}
       pickDifficulty={pickDifficulty}
@@ -40,6 +33,20 @@ export default ({
       isDrawer={isDrawer}
       currentWord={currentWord}
     />
+    <TimeHeader
+      preRound={preRound}
+      gameRound={gameRound}
+      isDrawer={isDrawer}
+      seconds={seconds}
+    />
+    <CurrentDrawer
+      announceDrawer={announceDrawer}
+      currentDrawerName={currentDrawerName}
+    />
+    <Start
+      handleStartGameClick={handleStartGameClick}
+      handleStartRoundClick={handleStartRoundClick}
+    />
     <RoundWinner showWinner={showWinner} winnerName={winnerName} />
-  </React.Fragment>
+  </div>
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 import Start from './Start';
-import GameInfoHeader from './GameInfoHeader';
+import GameInfoHeader from './GameHeader';
 import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
 import SweetAlert from 'sweetalert2-react';
@@ -51,15 +51,13 @@ export default function GameRoom({
         wordDifficulty={wordDifficulty}
         showWinner={showWinner}
         winnerName={winnerName}
+        handleStartGameClick={handleStartGameClick}
+        handleStartRoundClick={handleStartRoundClick}
       />
       <PickDifficulty
         isDrawer={isDrawer}
         pickDifficulty={pickDifficulty}
         handlePickDifficultyClick={handlePickDifficultyClick}
-      />
-      <Start
-        handleStartGameClick={handleStartGameClick}
-        handleStartRoundClick={handleStartRoundClick}
       />
       <PickWinner
         askForWinner={askForWinner}

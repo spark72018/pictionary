@@ -458,8 +458,10 @@ class App extends Component {
       />
     ) : (
       <GameRoom {...this.makeGameRoomProps()}>
-        <ChatRoom msgs={msgs} socket={this.socket} />
-        <DrawingBoard {...this.makeDrawingBoardProps()} />
+        <div className="main-container">
+          <DrawingBoard {...this.makeDrawingBoardProps()} />
+          <ChatRoom msgs={msgs} socket={this.socket} />
+        </div>
       </GameRoom>
     );
   }

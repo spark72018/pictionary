@@ -18,6 +18,8 @@ export default function PickDifficulty({
       </li>
     </ul>
   ) : pickDifficulty ? (
-    <h2>Drawer is picking a card...</h2>
+    <div className="pick-difficulty-container">
+      <h2>Drawer is picking a card...</h2>
+    </div>
   ) : null;
 }
