@@ -78,6 +78,7 @@ class App extends Component {
     socket.on('endGameRound', this.handleEndGameRound);
     socket.on('announceWinner', this.handleAnnounceWinner);
     socket.on('announceDrawer', this.handleAnnounceDrawer);
+    socket.on('warmClickHint', this.handleWarmClickHint);
     socket.on('error', this.handleSocketError);
     // TODO
     // socket.on('userLeft', this.handleUserLeft);
@@ -93,7 +94,19 @@ class App extends Component {
   };
 
   setWinnerId = winnerId => this.setState({ winnerId });
+
+  updateWarmMsgs = (msgs, timeId) =>
+    msgs.map(
+      msg => (msg.timeId !== timeId ? msg : { ...msg, warm: !msg.warm })
+    );
+
   // SOCKET HANDLERS
+  handleWarmClickHint = timeId => {
+    const { msgs } = this.state;
+    const updatedMsgs = this.updateWarmMsgs(msgs, timeId);
+
+    return this.setState({ msgs: updatedMsgs });
+  };
   handleAnnounceDrawer = roomInfo => {
     const { usersPlaying, currentDrawerIdx } = roomInfo;
     const currentDrawer = usersPlaying[currentDrawerIdx];
@@ -103,7 +116,11 @@ class App extends Component {
   };
   handleSocketError = e => console.error(e);
   handleEndPreRound = () => this.setPreRound(false);
-  handleUpdateChat = dataObj => this.addMsg(dataObj);
+  handleUpdateChat = dataObj => {
+    const withWarmAttribute = { ...dataObj, warm: false };
+
+    return this.addMsg(withWarmAttribute);
+  };
   handlePickedDifficulty = difficulty => {
     console.log('pickedDifficulty socket event', difficulty);
     this.setPickDifficulty(false);
@@ -248,6 +265,21 @@ class App extends Component {
     return this.socket.emit('pickedWinner', id);
   };
 
+  handleChatMessageClick = e => {
+    if (!this.state.isDrawer || !e.target.dataset.timeid) return;
+    const { msgs } = this.state;
+
+    // helper function
+    const getParsedTimeId = e => parseInt(e.target.dataset.timeid, 10);
+
+    const parsedId = getParsedTimeId(e);
+    this.socket.emit('warmClickHint', parsedId);
+
+    const updatedMsgs = this.updateWarmMsgs(msgs, parsedId);
+
+    return this.setState({ msgs: updatedMsgs });
+  };
+
   // SETTERS
   setMouseCoords = (x, y) => this.setState({ currentMouseCoords: { x, y } });
 
@@ -281,6 +313,7 @@ class App extends Component {
   };
 
   addMsg = msgData => {
+    console.log('addMsg', msgData);
     const { msgs } = this.state;
 
     if (msgs.length < 50) {
@@ -460,7 +493,11 @@ class App extends Component {
       <GameRoom {...this.makeGameRoomProps()}>
         <div className="main-container">
           <DrawingBoard {...this.makeDrawingBoardProps()} />
-          <ChatRoom msgs={msgs} socket={this.socket} />
+          <ChatRoom
+            msgs={msgs}
+            socket={this.socket}
+            handleChatMessageClick={this.handleChatMessageClick}
+          />
         </div>
       </GameRoom>
     );

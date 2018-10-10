@@ -4,14 +4,25 @@
 }
 
 .chat-container {
+    position: relative;
     display: inline-block;
-    width: 400px;
+    max-width: 400px;
 }
 
 .chat-container input {
-    position: relative;
-    top: 390px;
+    position: absolute;
+    bottom: 0;
     width: 100%;
+}
+
+.canvas-container {
+    position: relative;
+}
+
+.canvas-container button {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
 }
 
 .rooms {
@@ -36,13 +47,31 @@
 .chat-messages {
     list-style-type: none;
     max-height: 400px;
+    min-width: 350px;
     overflow: auto;
     overflow-x: hidden;
     padding-left: 2px;
 }
 
-.message {
+.chat-messages li {
+    perspective: 900;
+}
+
+p.message {
     margin: 0;
+    word-wrap: break-word;
+    cursor: pointer;
+    transition: transform .1s;
+}
+
+p.message:hover {
+    background-color: #FF9719;
+    transform: scale(1.002, 1.002);
+    box-shadow: 0 5px 10px 0 #7c4706, 0 6px 10px 0 #7c4706;
+}
+
+p.message.warm {
+    background-color: red;
 }
 
 .game-header {

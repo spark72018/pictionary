@@ -8,12 +8,22 @@ export default class ChatRoom extends Component {
     msg: ''
   };
 
+  chatRef = React.createRef();
+
+  componentDidMount() {
+    this.chatRef.current.scrollTop = 9999;
+  }
+
+  componentDidUpdate() {
+    this.chatRef.current.scrollTop = 9999;
+  }
+
   handleKeyDown = e => {
     if (e.keyCode === ENTER_KEYCODE) {
-      console.log('enter pressed');
       this.props.socket.emit('send message', {
         msg: this.state.msg,
-        time: getTime()
+        time: getTime(),
+        timeId: Date.now()
       });
 
       return this.setState({ msg: '' });
@@ -23,7 +33,12 @@ export default class ChatRoom extends Component {
   handleChange = e => this.setState({ msg: e.target.value });
 
   makeMessageItems = (data, idx) => (
-    <Message data={data} key={`message${idx}`} />
+    <Message
+      data={data}
+      idx={idx}
+      key={`message${idx}`}
+      handleChatMessageClick={this.props.handleChatMessageClick}
+    />
   );
 
   render() {
@@ -31,7 +46,9 @@ export default class ChatRoom extends Component {
     const { msgs } = this.props;
     return (
       <div className="chat-container">
-        <ul className="chat-messages">{msgs.map(this.makeMessageItems)}</ul>
+        <ul ref={this.chatRef} className="chat-messages">
+          {msgs.map(this.makeMessageItems)}
+        </ul>
         <input
           value={msg}
           onChange={this.handleChange}

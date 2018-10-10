@@ -1,16 +1,16 @@
 import React from 'react';
 
-export default function Message({ data, idx }) {
-  const { username, time, msg } = data;
+export default function Message({ data, idx, handleChatMessageClick }) {
+  const { username, time, msg, timeId, warm } = data;
   return (
-    <li key={`msg${idx}`}>
+    <li onClick={handleChatMessageClick} key={`msg${idx}`}>
       {username ? (
-        <p className="message">
+        <p data-timeid={timeId} className={!warm ? 'message' : 'message warm'}>
           <span className="msg-time">({time})</span> {username}
           &#58; {msg}
         </p>
       ) : (
-        <p className="message">
+        <p data-timeid={timeId} className="message">
           <span className="msg-time">{time}</span>
           &#58; {msg}
         </p>
