@@ -9,11 +9,10 @@ module.exports = (socket, roomInfo, io) => () => {
   decrementGameRoundSecondsByOne(roomInfo);
 
   console.log('after roundSeconds decrement', roomInfo.roundSeconds);
+  io.sockets.in(room).emit('updateGameRoundSeconds', roomInfo);
 
   const roundEnds = isZero(roomInfo.roundSeconds);
-
   if (roundEnds) {
     return endGameRound(socket, roomInfo, io);
   }
-  return io.sockets.in(room).emit('updateGameRoundSeconds', roomInfo);
 };

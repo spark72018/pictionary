@@ -1,8 +1,9 @@
 import React from 'react';
 import Start from './Start';
-import GameInfoHeader from './GameHeader';
+import GameHeader from './GameHeader';
 import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
+import PlayerScores from './PlayerScores';
 import SweetAlert from 'sweetalert2-react';
 
 export default function GameRoom({
@@ -19,12 +20,14 @@ export default function GameRoom({
   gameRound,
   roomInfo,
   showWinner,
+  showPlayerScores,
   winnerId,
   handleStartGameClick,
   handleStartRoundClick,
   handlePickDifficultyClick,
   handlePickWinnerClick,
   setShowAlert,
+  togglePlayerScores,
   children
 }) {
   const seconds = preRound
@@ -39,7 +42,7 @@ export default function GameRoom({
 
   return (
     <div className="game-room">
-      <GameInfoHeader
+      <GameHeader
         preRound={preRound}
         gameRound={gameRound}
         isDrawer={isDrawer}
@@ -53,6 +56,7 @@ export default function GameRoom({
         winnerName={winnerName}
         handleStartGameClick={handleStartGameClick}
         handleStartRoundClick={handleStartRoundClick}
+        togglePlayerScores={togglePlayerScores}
       />
       <PickDifficulty
         isDrawer={isDrawer}
@@ -64,6 +68,10 @@ export default function GameRoom({
         isDrawer={isDrawer}
         usersPlaying={usersPlaying}
         handlePickWinnerClick={handlePickWinnerClick}
+      />
+      <PlayerScores
+        showPlayerScores={showPlayerScores}
+        arrOfUsersPlaying={roomInfo.usersPlaying}
       />
       <SweetAlert
         showAlert={showAlert}

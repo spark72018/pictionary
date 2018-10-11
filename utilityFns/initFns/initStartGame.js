@@ -1,7 +1,7 @@
-const setRoomPlaying = require('./setRoomPlaying');
-const shuffleAndSetUsers = require('./shuffleAndSetUsers');
-const setUserDrawer = require('./setUserDrawer');
-const updateUsersPlaying = require('./updateUsersPlaying');
+const setRoomPlaying = require('../setRoomPlaying');
+const shuffleAndSetUsers = require('../shuffleAndSetUsers');
+const setUserDrawer = require('../setUserDrawer');
+const updateUsersPlaying = require('../updateUsersPlaying');
 //
 const initStartGame = (socket, state, io) =>
   socket.on('start game', () => {

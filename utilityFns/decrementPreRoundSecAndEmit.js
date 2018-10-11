@@ -8,14 +8,12 @@ module.exports = (socket, roomInfo, io) => () => {
   decrementPreRoundSecondsByOne(roomInfo);
 
   console.log('after preRoundSeconds decrement', roomInfo.preRoundSeconds);
+  io.sockets.in(room).emit('updatePreRoundSeconds', roomInfo);
 
   const roundEnds = isZero(roomInfo.preRoundSeconds);
-
   if (roundEnds) {
     return endPreRound(socket, roomInfo, io);
   }
-
-  return io.sockets.in(room).emit('updatePreRoundSeconds', roomInfo);
   // socket.emit('updatePreRoundSeconds', roomInfo);
   // return socket.broadcast.to(room).emit('updatePreRoundSeconds', roomInfo);
 };

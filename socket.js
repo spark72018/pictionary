@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const init = require('./utilityFns/init');
+const init = require('./utilityFns/initFns/init');
 const rooms = require('./roomStates');
 const removeUser = require('./utilityFns/removeUser');
 const removeFromUsersPlaying = require('./utilityFns/removeFromUsersPlaying');

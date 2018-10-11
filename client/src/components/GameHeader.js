@@ -19,9 +19,13 @@ export default ({
   showWinner,
   winnerName,
   handleStartGameClick,
-  handleStartRoundClick
+  handleStartRoundClick,
+  togglePlayerScores
 }) => (
   <div className="game-header">
+    <button onClick={togglePlayerScores} className="toggle-score">
+      Scores
+    </button>
     <WordDifficultyHeader
       isDrawer={isDrawer}
       pickDifficulty={pickDifficulty}
@@ -40,6 +44,7 @@ export default ({
       seconds={seconds}
     />
     <CurrentDrawer
+      isDrawer={isDrawer}
       announceDrawer={announceDrawer}
       currentDrawerName={currentDrawerName}
     />

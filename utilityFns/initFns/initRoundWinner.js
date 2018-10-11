@@ -1,5 +1,5 @@
-const giveUserOnePoint = require('./giveUserOnePoint');
-const pickNextDrawerAndStartNextRound = require('./pickNextDrawerAndStartNextRound');
+const giveUserOnePoint = require('../giveUserOnePoint');
+const pickNextDrawerAndStartNextRound = require('../pickNextDrawerAndStartNextRound');
 
 module.exports = (socket, state, io) =>
   socket.on('pickedWinner', winnerId => {

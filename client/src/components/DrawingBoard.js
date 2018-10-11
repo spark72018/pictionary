@@ -38,13 +38,25 @@ export default class DrawingBoard extends Component {
     return context.clearRect(0, 0, w, h);
   };
 
-  // EMIT THE CLEARED BOARD TO EVERYONE ELSE TOO
+  renderDrawingBoardButtons = () => (
+    <div className="drawing-buttons-container">
+      <button onClick={this.handleClearBoardClick}>Clear Board</button>,
+      <button onClick={this.handleEndRoundClick}>End Round</button>
+    </div>
+  );
+
   handleClearBoardClick = () => {
     if (!this.props.isDrawer) return;
 
     this.props.socket.emit('clearBoard');
 
     return this.clearBoard();
+  };
+
+  handleEndRoundClick = () => {
+    if (!this.props.isDrawer) return;
+
+    return this.props.socket.emit('endGameRound');
   };
 
   throttled = throttle(this.props.handleMouseMove, 10);
@@ -70,7 +82,7 @@ export default class DrawingBoard extends Component {
           height={450}
           style={{ border: '1px solid #000000' }}
         />
-        <button onClick={this.handleClearBoardClick}>Clear Board</button>
+        {this.props.isDrawer ? this.renderDrawingBoardButtons() : null}
       </div>
     );
   }

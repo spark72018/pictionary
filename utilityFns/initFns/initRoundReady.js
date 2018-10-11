@@ -1,7 +1,7 @@
-const decrementRoundSecondsByOne = require('./decrementRoundSecondsByOne');
-const decrementPreRoundSecAndEmit = require('./decrementPreRoundSecAndEmit');
-const startPreRoundTimer = require('./startPreRoundTimer');
-const setRoomPlaying = require('./setRoomPlaying');
+const decrementRoundSecondsByOne = require('../decrementRoundSecondsByOne');
+const decrementPreRoundSecAndEmit = require('../decrementPreRoundSecAndEmit');
+const startPreRoundTimer = require('../startPreRoundTimer');
+const setRoomPlaying = require('../setRoomPlaying');
 
 const initRoundReady = (socket, rooms, io) =>
   socket.on('round ready', () => {

@@ -26,7 +26,6 @@ class App extends Component {
     askForUserName: false,
     askForWinner: false,
     announceDrawer: false,
-    currentDrawerName: '',
     joinRoomName: '',
     joinedRoom: false,
     socketId: '',
@@ -43,6 +42,7 @@ class App extends Component {
     intervalId: null,
     showAlert: false,
     showWinner: false,
+    showPlayerScores: false,
     isDrawer: false,
     // isDrawer: true, // for dev
     alertInfo: {
@@ -63,6 +63,9 @@ class App extends Component {
   componentDidMount() {
     return this.initSocket(this.socket);
   }
+
+  togglePlayerScores = () =>
+    this.setState({ showPlayerScores: !this.state.showPlayerScores });
 
   initSocket = socket => {
     socket.on('joined room', this.handleJoinedRoom);
@@ -86,11 +89,9 @@ class App extends Component {
 
   setAnnounceDrawer = bool => this.setState({ announceDrawer: bool });
 
-  setCurrentDrawerName = str => this.setState({ currentDrawerName: str });
-
   showCurrentDrawer = drawerName => {
     this.setAnnounceDrawer(true);
-    this.setCurrentDrawerName(drawerName);
+    // this.setCurrentDrawerName(drawerName);
   };
 
   setWinnerId = winnerId => this.setState({ winnerId });
@@ -141,7 +142,7 @@ class App extends Component {
     window.setTimeout(() => {
       this.setShowWinner(false);
       this.setWinnerId('');
-    }, 2000);
+    }, 3000);
   };
 
   handleYourSocketId = id => this.setState({ socketId: id });
@@ -434,17 +435,21 @@ class App extends Component {
       pickDifficulty,
       wordDifficulty,
       currentWord,
-      currentDrawerName,
       isDrawer,
       preRound,
       gameRound,
       roomInfo,
       showWinner,
+      showPlayerScores,
       winnerId,
       askForWinner,
       announceDrawer,
       setShowAlert
     } = this.state;
+    const currentDrawerName =
+      roomInfo && roomInfo.usersPlaying.length > 1
+        ? roomInfo.usersPlaying[roomInfo.currentDrawerIdx].name
+        : '';
 
     return {
       showAlert,
@@ -459,9 +464,11 @@ class App extends Component {
       roomInfo,
       askForWinner,
       showWinner,
+      showPlayerScores,
       winnerId,
       announceDrawer,
       setShowAlert: this.setShowAlert,
+      togglePlayerScores: this.togglePlayerScores,
       handleStartGameClick: this.handleStartGameClick,
       handleStartRoundClick: this.handleStartRoundClick,
       handlePickDifficultyClick: this.handlePickDifficultyClick,

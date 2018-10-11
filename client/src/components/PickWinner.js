@@ -8,6 +8,7 @@ export default ({
 }) => {
   return askForWinner ? (
     <div className="pick-winner-container">
+      <h4>Who won this round ?</h4>
       {isDrawer ? (
         <ul className="pick-winner-list">
           {makePickWinnerList(usersPlaying, handlePickWinnerClick)}

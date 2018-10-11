@@ -1,5 +1,5 @@
-const removeUser = require('./removeUser');
-const removeFromUsersPlaying = require('./removeFromUsersPlaying');
+const removeUser = require('../removeUser');
+const removeFromUsersPlaying = require('../removeFromUsersPlaying');
 
 const initLeaveRoom = (socket, roomInfo) => {
   socket.on('leaveRoom', () => {

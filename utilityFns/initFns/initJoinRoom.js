@@ -1,4 +1,4 @@
-const addUser = require('./addUser');
+const addUser = require('../addUser');
 
 const initJoinRoom = (socket, rooms, io) =>
   socket.on('join room', info => {

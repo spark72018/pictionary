@@ -19,7 +19,7 @@
     position: relative;
 }
 
-.canvas-container button {
+.canvas-container .drawing-buttons-container {
     position: absolute;
     bottom: 1px;
     right: 1px;
@@ -101,8 +101,29 @@ p.message.warm {
 }
 
 .game-room .pick-winner-container {
-    background-color: yellow;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+}
+
+.pick-winner-container h4 {
+    margin: 0;
+}
+
+.pick-winner-list {
+    width: 500px;
+    cursor: pointer;
+}
+
+.pick-winner-list li {
+    list-style-type: none;
+    transition: all .2s;
+}
+
+.pick-winner-list li:hover {
+    transform: scale(1.002, 1.002);
+    box-shadow: 0 5px 10px 0 black, 0 6px 10px 0 black;
 }
 
 .game-room .pick-difficulty-container {
@@ -111,6 +132,7 @@ p.message.warm {
 }
 
 .game-room .pick-difficulty {
+    z-index: 100;
     list-style-type: none;
     background-color: red;
     position: absolute;
@@ -118,15 +140,31 @@ p.message.warm {
     width: 200px;
     left: 40%;
     padding-left: 0;
+    cursor: pointer;
 }
 
 .game-room .pick-difficulty li {
     background-color: blue;
     margin-top: 2px;
     height: 50px;
+    transition: all .2s;
+}
+
+.game-room .pick-difficulty li:hover {
+    background-color: yellow;
 }
 
 .game-header .start-buttons-container {
     position: relative;
     right: 0;
+}
+
+.game-room .player-scores-container {
+    width: 300px;
+    background-color: red;
+    margin: 0 auto;
+}
+
+.game-room .player-scores-list {
+    list-style-type: none;
 }
