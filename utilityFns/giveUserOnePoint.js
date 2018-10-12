@@ -1,6 +1,3 @@
-module.exports = (roomInfo, id) => {
-  const winner = roomInfo.users.find(user => user.id === id);
-  const currentScore = winner.score;
+const incrementUserPoint = require('./incrementUserPoint');
 
-  winner.score = currentScore + 1;
-};
+module.exports = incrementUserPoint(1);
