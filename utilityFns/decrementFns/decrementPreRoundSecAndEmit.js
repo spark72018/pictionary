@@ -1,6 +1,6 @@
 const decrementPreRoundSecondsByOne = require('./decrementPreRoundSecondsByOne');
-const endPreRound = require('./endPreRound');
-const isZero = require('./isZero');
+const endPreRound = require('../endPreRound');
+const isZero = require('../isZero');
 
 module.exports = (socket, roomInfo, io) => () => {
   console.log('decrementPreRoundSecAndEmit called');
