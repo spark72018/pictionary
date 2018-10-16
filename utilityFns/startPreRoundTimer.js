@@ -1,5 +1,5 @@
 const startTimer = require('./startTimer');
-const decrementPreRoundSecAndEmit = require('./decrementPreRoundSecAndEmit');
+const decrementPreRoundSecAndEmit = require('./decrementFns/decrementPreRoundSecAndEmit');
 
 module.exports = (socket, roomInfo, io) =>
   startTimer(

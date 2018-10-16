@@ -1,5 +1,5 @@
-const decrementRoundSecondsByOne = require('../decrementRoundSecondsByOne');
-const decrementPreRoundSecAndEmit = require('../decrementPreRoundSecAndEmit');
+const decrementRoundSecondsByOne = require('../decrementFns/decrementRoundSecondsByOne');
+const decrementPreRoundSecAndEmit = require('../decrementFns/decrementPreRoundSecAndEmit');
 const startPreRoundTimer = require('../startPreRoundTimer');
 const setRoomPlaying = require('../setRoomPlaying');
 

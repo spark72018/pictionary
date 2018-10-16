@@ -1,5 +1,5 @@
 const startTimer = require('./startTimer');
-const decrementGameRoundSecAndEmit = require('./decrementGameRoundSecAndEmit');
+const decrementGameRoundSecAndEmit = require('./decrementFns/decrementGameRoundSecAndEmit');
 
 module.exports = (socket, roomInfo, io) =>
   startTimer(
