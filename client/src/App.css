@@ -95,6 +95,10 @@ p.message.warm {
     display: inline-block;
 }
 
+.game-header .current-word {
+    font-size: 1.25em;
+}
+
 .game-room h2 {
     display: inline-block;
     margin: 0 auto;

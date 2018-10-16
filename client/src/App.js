@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 import JoinRoom from './components/JoinRoom';
 import GameRoom from './components/GameRoom';
 import ChatRoom from './components/ChatRoom';
-import TimeLeft from './components/TimeLeft';
 import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
 import getRandomElement from './utilityFns/getRandomElement';
