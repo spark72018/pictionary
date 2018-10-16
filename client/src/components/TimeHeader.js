@@ -5,15 +5,30 @@ export default ({ preRound, gameRound, isDrawer, seconds }) =>
   preRound ? (
     <div className="time-container">
       {isDrawer ? (
-        <h3>Time left to become familiar with card: </h3>
+        <h4>Time left to become familiar with card: </h4>
       ) : (
-        <h3>Time left for drawer to become familliar with card: </h3>
+        <h4>Pre-round ends: </h4>
       )}
       <TimeLeft seconds={seconds} />
     </div>
   ) : gameRound ? (
     <div className="time-container">
-      <h3>Time left until round ends: </h3>
+      <h4>Round ends: </h4>
       <TimeLeft seconds={seconds} />
     </div>
   ) : null;
+  // preRound ? (
+  //   <div className="time-container">
+  //     {isDrawer ? (
+  //       <h4>Time left to become familiar with card: </h4>
+  //     ) : (
+  //       <h4>Pre-round ends: </h4>
+  //     )}
+  //     <TimeLeft seconds={seconds} />
+  //   </div>
+  // ) : gameRound ? (
+  //   <div className="time-container">
+  //     <h4>Round ends: </h4>
+  //     <TimeLeft seconds={seconds} />
+  //   </div>
+  // ) : null;

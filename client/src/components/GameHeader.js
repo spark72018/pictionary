@@ -31,11 +31,10 @@ export default ({
       pickDifficulty={pickDifficulty}
       wordDifficulty={wordDifficulty}
     />
-    <CurrentWordHeader
-      preRound={preRound}
-      gameRound={gameRound}
+    <CurrentDrawer
       isDrawer={isDrawer}
-      currentWord={currentWord}
+      announceDrawer={announceDrawer}
+      currentDrawerName={currentDrawerName}
     />
     <TimeHeader
       preRound={preRound}
@@ -43,10 +42,11 @@ export default ({
       isDrawer={isDrawer}
       seconds={seconds}
     />
-    <CurrentDrawer
+    <CurrentWordHeader
+      preRound={preRound}
+      gameRound={gameRound}
       isDrawer={isDrawer}
-      announceDrawer={announceDrawer}
-      currentDrawerName={currentDrawerName}
+      currentWord={currentWord}
     />
     <Start
       handleStartGameClick={handleStartGameClick}
