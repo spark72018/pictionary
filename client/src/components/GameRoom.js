@@ -23,7 +23,6 @@ export default function GameRoom({
   showPlayerScores,
   winnerId,
   handleStartGameClick,
-  handleStartRoundClick,
   handlePickDifficultyClick,
   handlePickWinnerClick,
   setShowAlert,
@@ -55,7 +54,6 @@ export default function GameRoom({
         showWinner={showWinner}
         winnerName={winnerName}
         handleStartGameClick={handleStartGameClick}
-        handleStartRoundClick={handleStartRoundClick}
         togglePlayerScores={togglePlayerScores}
       />
       <PickDifficulty

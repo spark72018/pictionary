@@ -19,7 +19,6 @@ export default ({
   showWinner,
   winnerName,
   handleStartGameClick,
-  handleStartRoundClick,
   togglePlayerScores
 }) => (
   <div className="game-header">
@@ -48,10 +47,7 @@ export default ({
       isDrawer={isDrawer}
       currentWord={currentWord}
     />
-    <Start
-      handleStartGameClick={handleStartGameClick}
-      handleStartRoundClick={handleStartRoundClick}
-    />
+    <Start handleStartGameClick={handleStartGameClick} />
     <RoundWinner showWinner={showWinner} winnerName={winnerName} />
   </div>
 );

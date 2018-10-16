@@ -226,10 +226,6 @@ class App extends Component {
     this.socket.emit('round ready');
   };
 
-  handleStartRoundClick = e => {
-    console.log('handleStartRoundClick');
-  };
-
   handleSubmit = (e, username) => {
     e.preventDefault();
 
@@ -469,7 +465,6 @@ class App extends Component {
       setShowAlert: this.setShowAlert,
       togglePlayerScores: this.togglePlayerScores,
       handleStartGameClick: this.handleStartGameClick,
-      handleStartRoundClick: this.handleStartRoundClick,
       handlePickDifficultyClick: this.handlePickDifficultyClick,
       handlePickWinnerClick: this.handlePickWinnerClick
     };
