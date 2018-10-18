@@ -36,12 +36,26 @@ button {
 }
 
 .rooms {
-    background-color: red;
     list-style-type: none;
+    display: flex;
 }
 
 .rooms li {
+    position: relative;
+    background-size: cover;
     cursor: pointer;
+    width: 350px;
+    height: 350px;
+    margin: 5px;
+}
+
+.rooms li a {
+    position: absolute;
+    color: #FFF;
+    width: 100%;
+    bottom: 5px;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 .main-container {

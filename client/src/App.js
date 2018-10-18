@@ -7,7 +7,7 @@ import DrawingBoard from './components/DrawingBoard';
 import getTime from './utilityFns/getTime';
 import getRandomElement from './utilityFns/getRandomElement';
 import {
-  ROOM_NAMES,
+  ROOMS_INFO,
   DEV_URL,
   DEFAULT_COLOR,
   EASY_WORDS,
@@ -493,7 +493,7 @@ class App extends Component {
 
     return !joinedRoom ? (
       <JoinRoom
-        roomNames={ROOM_NAMES}
+        roomsInfo={ROOMS_INFO}
         askForUserName={askForUserName}
         handleRoomItemClick={this.handleRoomItemClick}
         handleSubmit={this.handleSubmit}

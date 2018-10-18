@@ -1,9 +1,10 @@
 import React from 'react';
 
 export default function withCallBack(cb) {
-  return function(name, idx) {
+  return function({ name, image }, idx) {
+    const style = { backgroundImage: `url(${image})` };
     return (
-      <li onClick={cb} key={`room${idx}`}>
+      <li style={style} onClick={cb} key={`room${idx}`}>
         <a>{name}</a>
       </li>
     );

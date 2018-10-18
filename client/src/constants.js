@@ -1,4 +1,10 @@
-export const ROOM_NAMES = ['Whiskey Room', 'Wine Room'];
+import WHISKEY_IMAGE from './images/whiskey.jpg';
+import WINE_IMAGE from './images/wine.jpg';
+
+export const ROOMS_INFO = [
+  { name: 'Whiskey Room', image: WHISKEY_IMAGE },
+  { name: 'Wine Room', image: WINE_IMAGE }
+];
 
 export const DEV_URL = 'http://localhost:8000';
 
