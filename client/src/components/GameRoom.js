@@ -41,6 +41,9 @@ export default function GameRoom({
     ? usersPlaying.find(user => user.id === winnerId).name
     : '';
 
+  console.log('GameRoom showAlert', showAlert);
+  console.log('GameRoom alertInfo', alertInfo);
+  // TODO: SWEETALERT ISN'T SHOWING UP
   return (
     <div className="game-room">
       <GameHeader
@@ -82,9 +85,8 @@ export default function GameRoom({
         arrOfUsersPlaying={roomInfo.usersPlaying}
       />
       <SweetAlert
-        showAlert={showAlert}
-        title={alertInfo.title}
-        text={alertInfo.text}
+        {...alertInfo}
+        show={showAlert}
         onConfirm={() => setShowAlert(false)}
       />
       {children}

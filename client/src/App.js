@@ -203,12 +203,18 @@ class App extends Component {
 
   // CLICK HANDLERS
   handleStartGameClick = e => {
-    console.log('handleStartGameClick called');
     const { roomInfo } = this.state;
-    console.log('roomInfo.users', roomInfo.users);
-    if (roomInfo.users.length < 2) {
-      console.log('not enough users');
-      return this.showCannotStartGameAlert();
+    const notEnoughPlayers = roomInfo.users.length < 2;
+    const aGameInSession = roomInfo.playing;
+
+    if (notEnoughPlayers || aGameInSession) {
+      console.log('not enough users or already playing');
+      const alertText =
+        (notEnoughPlayers &&
+          'You need at least two players to start the game!') ||
+        (aGameInSession && 'There is a game already in session.');
+      console.log('alertText is', alertText);
+      return this.showCannotStartGameAlert(alertText);
     }
 
     this.socket.emit('start game');
@@ -328,14 +334,17 @@ class App extends Component {
   };
 
   // miscellaneous
-  showCannotStartGameAlert = () =>
-    this.setState({
-      showAlert: true,
-      alertInfo: {
-        title: 'Cannot start the game yet',
-        text: 'This game requires at least two players'
-      }
-    });
+  showCannotStartGameAlert = text =>
+    this.setState(
+      {
+        showAlert: true,
+        alertInfo: {
+          title: 'Cannot start game',
+          text
+        }
+      },
+      () => console.log('showCannotStartGameAlert called', this.state)
+    );
 
   emitDrawingInfo = (x0, y0, x1, y1, color, canvas) => {
     const w = canvas.width;
