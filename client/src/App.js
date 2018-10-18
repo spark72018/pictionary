@@ -208,12 +208,11 @@ class App extends Component {
     const aGameInSession = roomInfo.playing;
 
     if (notEnoughPlayers || aGameInSession) {
-      console.log('not enough users or already playing');
       const alertText =
         (notEnoughPlayers &&
           'You need at least two players to start the game!') ||
         (aGameInSession && 'There is a game already in session.');
-      console.log('alertText is', alertText);
+
       return this.showCannotStartGameAlert(alertText);
     }
 
