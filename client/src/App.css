@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+button {
+    font-family: 'Lato', sans-serif;
+}
+
 .game-room .chat-container,
 .game-room .canvas-container {
     display: inline-block;
@@ -71,7 +81,7 @@ p.message:hover {
 }
 
 p.message.warm {
-    background-color: red;
+    background-color: rgb(255, 149, 11);
 }
 
 .game-header {
@@ -145,6 +155,8 @@ p.message.warm {
 }
 
 .game-room .pick-difficulty {
+    background-color: #FFF;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -160,16 +172,16 @@ p.message.warm {
 
 .game-room .pick-difficulty li {
     display: flex;
+    border: 1px solid #000;
     justify-content: center;
     align-items: center;
-    background-color: blue;
     margin-top: 2px;
-    height: 50px;
+    height: 33%;
     transition: all .2s;
 }
 
 .game-room .pick-difficulty li:hover {
-    background-color: yellow;
+    background-color: rgb(216, 216, 175);
 }
 
 .game-header .start-buttons-container {
