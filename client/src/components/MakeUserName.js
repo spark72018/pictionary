@@ -10,7 +10,8 @@ export default class MakeUserName extends Component {
   render() {
     const { text } = this.state;
     return (
-      <form>
+      <form className="choose-name-form">
+        <h4>Choose a username</h4>
         <input value={text} onChange={this.handleChange} />
         <button type="submit" onClick={e => this.props.handleSubmit(e, text)}>
           OK

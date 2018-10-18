@@ -8,6 +8,15 @@ button {
     font-family: 'Lato', sans-serif;
 }
 
+.choose-name-form {
+    display: inline-block;
+    margin-left: 40px;
+}
+
+.choose-name-form h4 {
+    margin: 0px 0px 10px 0px;
+}
+
 .game-room .chat-container,
 .game-room .canvas-container {
     display: inline-block;
