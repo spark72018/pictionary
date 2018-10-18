@@ -16,7 +16,7 @@ export default class Timer extends Component {
     const { seconds, handleStartRound } = this.props;
     return (
       <div className="timer-container">
-        <span>{this.convertToTimerStr(seconds)}</span>
+        <span className="time-text">{this.convertToTimerStr(seconds)}</span>
       </div>
     );
   }

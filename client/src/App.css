@@ -111,6 +111,16 @@ p.message.warm {
     text-align: center;
 }
 
+.time-container {
+    text-align: center;
+    margin: 0px 10px;
+    width: 40%;
+}
+
+.time-container .time-text {
+    font-size: 2em;
+}
+
 .pick-winner-container h4 {
     margin: 0;
 }
@@ -131,23 +141,27 @@ p.message.warm {
 }
 
 .game-room .pick-difficulty-container {
-    background-color: blue;
     text-align: center;
 }
 
 .game-room .pick-difficulty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     z-index: 100;
     list-style-type: none;
-    background-color: red;
     position: absolute;
     height: 200px;
-    width: 200px;
+    width: 150px;
     left: 40%;
     padding-left: 0;
     cursor: pointer;
 }
 
 .game-room .pick-difficulty li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: blue;
     margin-top: 2px;
     height: 50px;

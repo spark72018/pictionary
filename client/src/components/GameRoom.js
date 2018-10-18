@@ -1,6 +1,8 @@
 import React from 'react';
 import Start from './Start';
 import GameHeader from './GameHeader';
+import CurrentWordHeader from './CurrentWordHeader';
+import CurrentDrawer from './CurrentDrawer';
 import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
 import PlayerScores from './PlayerScores';
@@ -46,9 +48,6 @@ export default function GameRoom({
         gameRound={gameRound}
         isDrawer={isDrawer}
         seconds={seconds}
-        announceDrawer={announceDrawer}
-        currentWord={currentWord}
-        currentDrawerName={currentDrawerName}
         pickDifficulty={pickDifficulty}
         wordDifficulty={wordDifficulty}
         showWinner={showWinner}
@@ -66,6 +65,17 @@ export default function GameRoom({
         isDrawer={isDrawer}
         usersPlaying={usersPlaying}
         handlePickWinnerClick={handlePickWinnerClick}
+      />
+      <CurrentWordHeader
+        preRound={preRound}
+        gameRound={gameRound}
+        isDrawer={isDrawer}
+        currentWord={currentWord}
+      />
+      <CurrentDrawer
+        isDrawer={isDrawer}
+        announceDrawer={announceDrawer}
+        currentDrawerName={currentDrawerName}
       />
       <PlayerScores
         showPlayerScores={showPlayerScores}
