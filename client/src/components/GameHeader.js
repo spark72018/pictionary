@@ -9,8 +9,6 @@ export default ({
   gameRound,
   isDrawer,
   seconds,
-  pickDifficulty,
-  wordDifficulty,
   showWinner,
   winnerName,
   handleStartGameClick,
@@ -20,11 +18,6 @@ export default ({
     <button onClick={togglePlayerScores} className="toggle-score">
       Scores
     </button>
-    <WordDifficultyHeader
-      isDrawer={isDrawer}
-      pickDifficulty={pickDifficulty}
-      wordDifficulty={wordDifficulty}
-    />
     <TimeHeader
       preRound={preRound}
       gameRound={gameRound}

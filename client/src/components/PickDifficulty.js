@@ -5,21 +5,26 @@ export default function PickDifficulty({
   pickDifficulty,
   handlePickDifficultyClick
 }) {
-  return pickDifficulty && isDrawer ? (
-    <ul className="pick-difficulty">
-      <li onClick={handlePickDifficultyClick} data-difficulty={'easyWords'}>
-        Easy Word
-      </li>
-      <li onClick={handlePickDifficultyClick} data-difficulty={'mediumWords'}>
-        Medium Word
-      </li>
-      <li onClick={handlePickDifficultyClick} data-difficulty={'hardWords'}>
-        Hard Word
-      </li>
-    </ul>
-  ) : pickDifficulty ? (
+  return (
     <div className="pick-difficulty-container">
-      <h2>Drawer is picking a card...</h2>
+      {pickDifficulty && isDrawer ? (
+        <ul className="pick-difficulty">
+          <li onClick={handlePickDifficultyClick} data-difficulty={'easyWords'}>
+            Easy Word
+          </li>
+          <li
+            onClick={handlePickDifficultyClick}
+            data-difficulty={'mediumWords'}
+          >
+            Medium Word
+          </li>
+          <li onClick={handlePickDifficultyClick} data-difficulty={'hardWords'}>
+            Hard Word
+          </li>
+        </ul>
+      ) : pickDifficulty ? (
+        <h2>Drawer is picking a card...</h2>
+      ) : null}
     </div>
-  ) : null;
+  );
 }

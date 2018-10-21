@@ -44,6 +44,13 @@ button {
     right: 1px;
 }
 
+.join-room {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .rooms {
     list-style-type: none;
     display: flex;
@@ -53,8 +60,8 @@ button {
     position: relative;
     background-size: cover;
     cursor: pointer;
-    width: 350px;
-    height: 350px;
+    width: 300px;
+    height: 300px;
     margin: 5px;
 }
 
@@ -135,6 +142,10 @@ p.message.warm {
 .game-room h2 {
     display: inline-block;
     margin: 0 auto;
+}
+
+.game-room h4 {
+    text-align: center;
 }
 
 .game-room .pick-winner-container {

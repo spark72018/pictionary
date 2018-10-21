@@ -5,6 +5,7 @@ import CurrentWordHeader from './CurrentWordHeader';
 import CurrentDrawer from './CurrentDrawer';
 import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
+import WordDifficultyHeader from './WordDifficultyHeader';
 import PlayerScores from './PlayerScores';
 import SweetAlert from 'sweetalert2-react';
 
@@ -48,8 +49,6 @@ export default function GameRoom({
         gameRound={gameRound}
         isDrawer={isDrawer}
         seconds={seconds}
-        pickDifficulty={pickDifficulty}
-        wordDifficulty={wordDifficulty}
         showWinner={showWinner}
         winnerName={winnerName}
         handleStartGameClick={handleStartGameClick}
@@ -59,6 +58,11 @@ export default function GameRoom({
         isDrawer={isDrawer}
         pickDifficulty={pickDifficulty}
         handlePickDifficultyClick={handlePickDifficultyClick}
+      />
+      <WordDifficultyHeader
+        isDrawer={isDrawer}
+        pickDifficulty={pickDifficulty}
+        wordDifficulty={wordDifficulty}
       />
       <PickWinner
         askForWinner={askForWinner}
