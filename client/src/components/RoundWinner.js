@@ -3,6 +3,6 @@ import React from 'react';
 export default ({ showWinner, winnerName }) =>
   showWinner ? (
     <div className="round-winner-container">
-      <h4>{`${!winnerName ? 'No one' : winnerName} won this round`}</h4>
+      <h1>{`${!winnerName ? 'No one' : winnerName} won this round`}</h1>
     </div>
   ) : null;

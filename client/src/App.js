@@ -16,10 +16,6 @@ import {
 } from './constants';
 import './App.css';
 
-// When user joins room, if(roomInfo.playing) and !roomInfo.usersPlaying.find(info => info.id === myId)
-// then user is spectator
-// Also handle when next round begins, so user can join game
-
 class App extends Component {
   state = {
     askForUserName: false,
@@ -57,7 +53,8 @@ class App extends Component {
     winnerId: ''
   };
 
-  socket = io(DEV_URL);
+  // socket = io(DEV_URL);
+  socket = io();
 
   componentDidMount() {
     return this.initSocket(this.socket);
@@ -122,7 +119,6 @@ class App extends Component {
     return this.addMsg(withWarmAttribute);
   };
   handlePickedDifficulty = difficulty => {
-    console.log('pickedDifficulty socket event', difficulty);
     this.setPickDifficulty(false);
     this.setState({ wordDifficulty: difficulty });
 
@@ -132,10 +128,9 @@ class App extends Component {
   };
 
   handleAnnounceWinner = winnerId => {
-    console.log('handleAnnounceWinner winnerId', winnerId);
     this.setAskForWinner(false);
-    this.setShowWinner(true);
     this.setWinnerId(winnerId);
+    this.setShowWinner(true);
     this.setState({ currentWord: '' });
 
     window.setTimeout(() => {
@@ -314,7 +309,6 @@ class App extends Component {
   };
 
   addMsg = msgData => {
-    console.log('addMsg', msgData);
     const { msgs } = this.state;
 
     if (msgs.length < 50) {
@@ -334,16 +328,13 @@ class App extends Component {
 
   // miscellaneous
   showCannotStartGameAlert = text =>
-    this.setState(
-      {
-        showAlert: true,
-        alertInfo: {
-          title: 'Cannot start game',
-          text
-        }
-      },
-      () => console.log('showCannotStartGameAlert called', this.state)
-    );
+    this.setState({
+      showAlert: true,
+      alertInfo: {
+        title: 'Cannot start game',
+        text
+      }
+    });
 
   emitDrawingInfo = (x0, y0, x1, y1, color, canvas) => {
     const w = canvas.width;

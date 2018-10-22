@@ -8,11 +8,13 @@ export default ({
 }) => {
   return askForWinner ? (
     <div className="pick-winner-container">
-      <h4>Who won this round ?</h4>
       {isDrawer ? (
-        <ul className="pick-winner-list">
-          {makePickWinnerList(usersPlaying, handlePickWinnerClick)}
-        </ul>
+        <React.Fragment>
+          <h4>Who won this round ?</h4>
+          <ul className="pick-winner-list">
+            {makePickWinnerList(usersPlaying, handlePickWinnerClick)}
+          </ul>
+        </React.Fragment>
       ) : (
         <h2>Drawer is picking the winner of this round.</h2>
       )}

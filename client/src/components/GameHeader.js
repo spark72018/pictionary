@@ -9,8 +9,6 @@ export default ({
   gameRound,
   isDrawer,
   seconds,
-  showWinner,
-  winnerName,
   handleStartGameClick,
   togglePlayerScores
 }) => (
@@ -25,6 +23,5 @@ export default ({
       seconds={seconds}
     />
     <Start handleStartGameClick={handleStartGameClick} />
-    <RoundWinner showWinner={showWinner} winnerName={winnerName} />
   </div>
 );

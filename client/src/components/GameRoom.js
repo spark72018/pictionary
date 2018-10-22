@@ -7,6 +7,7 @@ import PickDifficulty from './PickDifficulty';
 import PickWinner from './PickWinner';
 import WordDifficultyHeader from './WordDifficultyHeader';
 import PlayerScores from './PlayerScores';
+import RoundWinner from './RoundWinner';
 import SweetAlert from 'sweetalert2-react';
 
 export default function GameRoom({
@@ -49,8 +50,6 @@ export default function GameRoom({
         gameRound={gameRound}
         isDrawer={isDrawer}
         seconds={seconds}
-        showWinner={showWinner}
-        winnerName={winnerName}
         handleStartGameClick={handleStartGameClick}
         togglePlayerScores={togglePlayerScores}
       />
@@ -85,6 +84,7 @@ export default function GameRoom({
         showPlayerScores={showPlayerScores}
         arrOfUsersPlaying={roomInfo.usersPlaying}
       />
+      <RoundWinner showWinner={showWinner} winnerName={winnerName} />
       <SweetAlert
         {...alertInfo}
         show={showAlert}
