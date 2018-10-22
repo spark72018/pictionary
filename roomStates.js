@@ -6,7 +6,7 @@ module.exports = {
     currentDrawerIdx: 0,
     roundSeconds: 120,
     // roundSeconds: 2, // for dev purposes
-    preRoundSeconds: 5,
+    preRoundSeconds: 10,
     // preRoundSeconds: 3, // for dev purposes
     roundIntervalId: null,
     preRoundIntervalId: null
@@ -17,7 +17,7 @@ module.exports = {
     usersPlaying: [],
     currentDrawerIdx: 0,
     roundSeconds: 120,
-    preRoundSeconds: 5,
+    preRoundSeconds: 10,
     roundIntervalId: null,
     preRoundIntervalId: null
   }
