@@ -17,6 +17,7 @@ import {
 import './App.css';
 
 // time fix
+// make notifications more obvious
 // fix drawing off board
 // handle user leaving in middle
 
@@ -258,6 +259,7 @@ class App extends Component {
   };
 
   handlePickWinnerClick = e => {
+    console.log('handlePickWinnerClick', e.target);
     this.setAskForWinner(false);
 
     const { id } = e.target.dataset;
