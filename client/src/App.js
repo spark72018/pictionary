@@ -17,6 +17,7 @@ import {
 import './App.css';
 
 // time fix
+// make notifications more obvious
 // fix drawing off board
 // handle user leaving in middle
 
