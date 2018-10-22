@@ -16,6 +16,11 @@ import {
 } from './constants';
 import './App.css';
 
+// time fix
+// fix drawing off board
+// handle user leaving in middle
+
+
 class App extends Component {
   state = {
     askForUserName: false,
@@ -253,7 +258,6 @@ class App extends Component {
   };
 
   handlePickWinnerClick = e => {
-    console.log('handlePickWinnerClick', e.target);
     this.setAskForWinner(false);
 
     const { id } = e.target.dataset;
