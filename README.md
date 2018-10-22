@@ -1,5 +1,7 @@
 # Pictionary Game
 
+Made with React, Node, Express, Socket.io
+
 To install dependencies:
 
 ```
